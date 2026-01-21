@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 
 const features = [
@@ -80,9 +81,11 @@ const Strassenbau = () => {
               Wir von Diker Straßenbau sind Ihre Straßenbauer in Solingen und Umgebung. Durch Kompetenz, Motivation und einem modernen Equipment haben wir Ihre Herausforderungen rund um den Straßenbau im Griff. Wir kommen mit Manpower und High-Tech. Lassen Sie sich begeistern.
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                Kontakt aufnehmen
-                <ArrowRight className="ml-2 w-5 h-5" />
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+                <Link to="/#kontakt">
+                  Kontakt aufnehmen
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
               </Button>
             </div>
           </div>
