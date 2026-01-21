@@ -7,23 +7,23 @@ import strassenbauImg from "@/assets/service-strassenbau.jpg";
 const features = [
   {
     icon: Users,
-    title: "Kompetentes Team",
-    description: "Wir beschäftigen ausschließlich ausgebildete Tiefbauer und hausintern angelernte Hilfskräfte. Bei uns muss 'jeder alles können' - so sammelt sich in unserem Team immer mehr Erfahrung an."
+    title: "Kompetente Straßenbauer für Ihre Projekte",
+    description: "Unser Team besteht aus ausgebildeten Tiefbau-Facharbeitern und hausintern angelernten Hilfskräften. Darüber hinaus steht uns ein großer Pool an Spezialisten zur Seite, mit denen wir auch besonderen Herausforderungen begegnen können. Durch eine faire Behandlung, familiären Umgang und übertarifliche Bezahlung halten wir unser hoch kompetentes Team. Wir verfolgen bei unseren Mitarbeitern ein klares Ziel: Jeder sollte alles können."
   },
   {
     icon: Wrench,
-    title: "Modernes Equipment",
-    description: "Moderne Werkzeuge, leistungsstarke Maschinen und innovative, effiziente Verfahren erledigen Ihre Bauvorhaben in einer gleich bleibend hohen Qualität."
+    title: "Moderne Maschinen und Fahrzeuge",
+    description: "Bei uns bleibt eine Maschine nur so lange im Einsatz, bis es eine bessere gibt. Hocheffiziente Werkzeuge, leistungsstarke Fahrzeuge und innovative Hilfsmittel machen jedes Bauprojekt in kürzester Zeit umsetzbar. Neben einer maximalen Effizienz achten wir bei unserem Equipment auch auf den Umweltschutz – alle Fahrzeuge erfüllen die Anforderungen an den Emissionsschutz."
   },
   {
     icon: MessageSquare,
-    title: "Umfassende Beratung",
-    description: "Wir begutachten Ihre Baustelle professionell und erarbeiten gemeinsam mit Ihnen einen Maßnahmenplan. Profitieren Sie von unserer hohen Erfahrung."
+    title: "Umfassende Beratung für Straßenbau und Tiefbau",
+    description: "Wir bieten Ihnen unsere umfassende Kompetenz bei Beratung und Begutachtung Ihrer Projekte an. Mit Hilfe von zertifizierten Bausachverständigen, Architekten, Ingenieuren oder Spezialisten können wir Ihnen eine umfassende Beratung bei Neubau oder Sanierung anbieten. Sie erhalten damit eine hohe Sicherheit, was die termingerechte Ausführung und das Einhalten Ihres Budgets angeht."
   },
   {
     icon: Settings,
-    title: "Reparatur & Instandsetzung",
-    description: "Ob Beseitigung von kleinen Frostschäden oder Instandsetzung massiver Schäden: Wir stehen bereit mit innovativen Produkten und aktuellstem Wissen."
+    title: "Für kleine wie große Projekte bereit",
+    description: "Rufen Sie uns an, gleichgültig, wie klein, groß, eilig oder langfristig Ihr Bauvorhaben sein soll. Wir kommen zur Ausbesserung von Schlaglöchern ebenso gerne, wie zur Sanierung ganzer Straßen. Die fristgerechte, schnelle und professionelle Ausführung aller Aufträge ist Teil unserer Firmenphilosophie."
   }
 ];
 
@@ -55,13 +55,13 @@ const Strassenbau = () => {
         <div className="relative z-10 container-custom section-padding">
           <div className="max-w-2xl">
             <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4 animate-fade-up">
-              Tiefbauer mit Herz
+              Straßenbau mit Leidenschaft
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--text-light))] mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              Ihr Tiefbauunternehmen in Solingen
+              Mit Kraft und Kompetenz: Ihr Straßenbauunternehmen
             </h1>
             <p className="text-lg md:text-xl text-[hsl(var(--text-light))/80%] mb-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              Ob Parkplatz, Straße, Fahrradweg oder Baugründung – wir sind Tiefbauer mit Herz, Leidenschaft und Können.
+              Wir von Diker Straßenbau sind Ihre Straßenbauer in Solingen und Umgebung. Durch Kompetenz, Motivation und einem modernen Equipment haben wir Ihre Herausforderungen rund um den Straßenbau im Griff. Wir kommen mit Manpower und High-Tech.
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
@@ -95,14 +95,15 @@ const Strassenbau = () => {
         <div className="container-custom">
           <div className="text-center mb-16">
             <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4">
-              Warum Diker?
+              Unsere Stärken
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Kompetenz & Erfahrung
+              Warum Diker Straßenbau?
             </h2>
             <p className="text-muted-foreground max-w-3xl mx-auto text-lg">
-              Vertrauen Sie uns Ihre Herausforderung rund um den Tiefbau an. Wir bieten ein modernes Equipment, 
-              ein kompetentes Team und vor allem eine Leidenschaft zur Sache.
+              Damit sichern wir uns für Ihre Projekte rund um Straßenbau und Tiefbau stets die größte Kompetenz. 
+              Das macht uns nicht nur jederzeit einsatzbereit – vor allem erreichen wir damit, dass jeder aus unserem Team 
+              einen immer größeren Schatz an Erfahrungen ansammeln kann.
             </p>
           </div>
 
@@ -134,11 +135,12 @@ const Strassenbau = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-[hsl(var(--text-light))] mb-6">
-                Lassen Sie uns Ihr Projekt gemeinsam realisieren
+                Zuverlässigkeit für Ihre Planungssicherheit
               </h2>
               <p className="text-[hsl(var(--text-light))/80%] text-lg mb-8">
-                Rufen Sie uns an, gleichgültig um welches Tiefbau-Projekt es sich bei Ihnen handelt. 
-                Wir begutachten Ihre Baustelle professionell und erarbeiten gemeinsam mit Ihnen einen Maßnahmenplan.
+                Wir entwickeln auf Grundlage der festgestellten Notwendigkeiten die bestmögliche Lösung für Ihr Projekt. 
+                Wenn wir kommen, dann ist die professionelle, sachgerechte und effiziente Ausführung Ihres Bauvorhabens garantiert. 
+                Zuverlässigkeit für Ihre Planungssicherheit gehört bei uns zur Firmenphilosophie.
               </p>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 Kostenlose Beratung anfragen
