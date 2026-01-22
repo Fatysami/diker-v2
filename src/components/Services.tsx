@@ -28,7 +28,7 @@ const services = [
       "Spezialisierte Infrastrukturarbeiten für Entwässerung und unterirdische Systeme.",
     image: kanalbauImg,
     features: ["Entwässerung", "Rohrleitungen", "Schachtbau"],
-    link: null,
+    link: "/kanalbau",
   },
   {
     title: "Garten- & Landschaftsbau",
