@@ -79,8 +79,8 @@ const Services = () => {
                     <h3 className="text-2xl font-bold text-card-foreground">
                       {service.title}
                     </h3>
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${service.link ? 'bg-primary group-hover:bg-primary/90' : 'bg-primary/10 group-hover:bg-primary'}`}>
-                      <ArrowUpRight className={`w-5 h-5 transition-colors ${service.link ? 'text-primary-foreground' : 'text-primary group-hover:text-primary-foreground'}`} />
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-primary/10 group-hover:bg-primary">
+                      <ArrowUpRight className="w-5 h-5 transition-colors text-primary group-hover:text-primary-foreground" />
                     </div>
                   </div>
                   
