@@ -66,7 +66,7 @@ const Strassenbau = () => {
             alt="Straßenbau" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--hero-overlay))/95%] via-[hsl(var(--hero-overlay))/70%] to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/80 to-secondary/60" />
         </div>
         
         <div className="relative z-10 container-custom section-padding">
@@ -74,10 +74,10 @@ const Strassenbau = () => {
             <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4 animate-fade-up">
               Straßenbau mit Leidenschaft
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[hsl(var(--text-light))] mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Mit Kraft und Kompetenz: Ihr Straßenbauunternehmen
             </h1>
-            <p className="text-lg md:text-xl text-[hsl(var(--text-light))/80%] mb-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            <p className="text-lg md:text-xl text-primary-foreground/80 mb-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
               Wir von Diker Straßenbau sind Ihre Straßenbauer in Solingen und Umgebung. Durch Kompetenz, Motivation und einem modernen Equipment haben wir Ihre Herausforderungen rund um den Straßenbau im Griff. Wir kommen mit Manpower und High-Tech. Lassen Sie sich begeistern.
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
