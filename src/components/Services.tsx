@@ -20,7 +20,7 @@ const services = [
       "Fundamente und Erdarbeiten bilden die Basis für jedes erfolgreiche Bauprojekt.",
     image: tiefbauImg,
     features: ["Erdarbeiten", "Fundamente", "Baugründung"],
-    link: null,
+    link: "/tiefbau",
   },
   {
     title: "Kanalbau",
