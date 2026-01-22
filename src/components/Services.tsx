@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
 import kanalbauImg from "@/assets/service-kanalbau.jpg";
@@ -11,6 +12,7 @@ const services = [
       "Parkplätze, Straßen und Fahrradwege – professionell geplant und termingerecht umgesetzt.",
     image: strassenbauImg,
     features: ["Asphaltierung", "Pflasterarbeiten", "Fahrradwege"],
+    link: "/strassenbau",
   },
   {
     title: "Straßentiefbau",
@@ -18,6 +20,7 @@ const services = [
       "Fundamente und Erdarbeiten bilden die Basis für jedes erfolgreiche Bauprojekt.",
     image: tiefbauImg,
     features: ["Erdarbeiten", "Fundamente", "Baugründung"],
+    link: null,
   },
   {
     title: "Kanalbau",
@@ -25,6 +28,7 @@ const services = [
       "Spezialisierte Infrastrukturarbeiten für Entwässerung und unterirdische Systeme.",
     image: kanalbauImg,
     features: ["Entwässerung", "Rohrleitungen", "Schachtbau"],
+    link: null,
   },
   {
     title: "Garten- & Landschaftsbau",
@@ -32,6 +36,7 @@ const services = [
       "Gestaltung von Außenanlagen mit Naturstein, Bepflanzung und modernem Design.",
     image: gartenImg,
     features: ["Naturstein", "Bepflanzung", "Terrassen"],
+    link: null,
   },
 ];
 
@@ -55,51 +60,71 @@ const Services = () => {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {services.map((service, index) => (
-            <div
-              key={service.title}
-              className="group relative bg-card rounded-2xl overflow-hidden card-hover border border-border"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-              </div>
+          {services.map((service, index) => {
+            const content = (
+              <>
+                {/* Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                </div>
 
-              {/* Content */}
-              <div className="p-6 lg:p-8">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-2xl font-bold text-card-foreground">
-                    {service.title}
-                  </h3>
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary transition-colors">
-                    <ArrowUpRight className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors" />
+                {/* Content */}
+                <div className="p-6 lg:p-8">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-card-foreground">
+                      {service.title}
+                    </h3>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${service.link ? 'bg-primary group-hover:bg-primary/90' : 'bg-primary/10 group-hover:bg-primary'}`}>
+                      <ArrowUpRight className={`w-5 h-5 transition-colors ${service.link ? 'text-primary-foreground' : 'text-primary group-hover:text-primary-foreground'}`} />
+                    </div>
+                  </div>
+                  
+                  <p className="text-muted-foreground mb-6">
+                    {service.description}
+                  </p>
+
+                  {/* Features */}
+                  <div className="flex flex-wrap gap-2">
+                    {service.features.map((feature) => (
+                      <span
+                        key={feature}
+                        className="inline-block bg-muted text-muted-foreground text-sm px-3 py-1 rounded-full"
+                      >
+                        {feature}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                
-                <p className="text-muted-foreground mb-6">
-                  {service.description}
-                </p>
+              </>
+            );
 
-                {/* Features */}
-                <div className="flex flex-wrap gap-2">
-                  {service.features.map((feature) => (
-                    <span
-                      key={feature}
-                      className="inline-block bg-muted text-muted-foreground text-sm px-3 py-1 rounded-full"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
+            const cardClassName = `group relative bg-card rounded-2xl overflow-hidden card-hover border border-border block ${service.link ? 'cursor-pointer' : ''}`;
+            const cardStyle = { animationDelay: `${index * 0.1}s` };
+
+            return service.link ? (
+              <Link
+                key={service.title}
+                to={service.link}
+                className={cardClassName}
+                style={cardStyle}
+              >
+                {content}
+              </Link>
+            ) : (
+              <div
+                key={service.title}
+                className={cardClassName}
+                style={cardStyle}
+              >
+                {content}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
