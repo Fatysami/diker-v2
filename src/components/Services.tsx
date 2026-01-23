@@ -1,5 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
 import kanalbauImg from "@/assets/service-kanalbau.jpg";
@@ -41,11 +43,41 @@ const services = [
 ];
 
 const Services = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+      },
+    },
+  };
+
   return (
     <section id="leistungen" className="section-padding bg-background">
       <div className="container-custom">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4">
             Unsere Leistungen
           </span>
@@ -56,11 +88,17 @@ const Services = () => {
             Von der Beratung bis zur Fertigstellung – wir bieten Ihnen 
             umfassende Lösungen für Ihre Bauprojekte.
           </p>
-        </div>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {services.map((service, index) => {
+        <motion.div 
+          ref={ref}
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+        >
+          {services.map((service) => {
             const content = (
               <>
                 {/* Image */}
@@ -68,7 +106,7 @@ const Services = () => {
                   <img
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                 </div>
@@ -79,8 +117,8 @@ const Services = () => {
                     <h3 className="text-2xl font-bold text-card-foreground">
                       {service.title}
                     </h3>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors bg-primary/10 group-hover:bg-primary">
-                      <ArrowUpRight className="w-5 h-5 transition-colors text-primary group-hover:text-primary-foreground" />
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 bg-primary/10 group-hover:bg-primary group-hover:scale-110">
+                      <ArrowUpRight className="w-5 h-5 transition-all duration-300 text-primary group-hover:text-primary-foreground group-hover:rotate-45" />
                     </div>
                   </div>
                   
@@ -93,7 +131,7 @@ const Services = () => {
                     {service.features.map((feature) => (
                       <span
                         key={feature}
-                        className="inline-block bg-muted text-muted-foreground text-sm px-3 py-1 rounded-full"
+                        className="inline-block bg-muted text-muted-foreground text-sm px-3 py-1 rounded-full transition-colors duration-300 group-hover:bg-primary/10 group-hover:text-primary"
                       >
                         {feature}
                       </span>
@@ -103,29 +141,24 @@ const Services = () => {
               </>
             );
 
-            const cardClassName = `group relative bg-card rounded-2xl overflow-hidden card-hover border border-border block ${service.link ? 'cursor-pointer' : ''}`;
-            const cardStyle = { animationDelay: `${index * 0.1}s` };
-
-            return service.link ? (
-              <Link
-                key={service.title}
-                to={service.link}
-                className={cardClassName}
-                style={cardStyle}
-              >
-                {content}
-              </Link>
-            ) : (
-              <div
-                key={service.title}
-                className={cardClassName}
-                style={cardStyle}
-              >
-                {content}
-              </div>
+            return (
+              <motion.div key={service.title} variants={itemVariants}>
+                {service.link ? (
+                  <Link
+                    to={service.link}
+                    className="group relative bg-card rounded-2xl overflow-hidden border border-border block cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 hover:border-primary/30"
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <div className="group relative bg-card rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 hover:border-primary/30">
+                    {content}
+                  </div>
+                )}
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
