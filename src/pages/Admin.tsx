@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  LogOut, Save, Plus, Trash2, ArrowLeft, 
+  LogOut, Save, ArrowLeft, 
   FileText, Wrench, Image, Phone, Loader2 
 } from "lucide-react";
 import { toast } from "sonner";
+import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
 
 interface SiteContent {
   id: string;
@@ -37,6 +38,16 @@ interface ContactInfo {
   display_order: number;
 }
 
+interface Project {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string | null;
+  image_url: string;
+  display_order: number;
+  is_active: boolean;
+}
+
 const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -46,6 +57,7 @@ const Admin = () => {
   const [content, setContent] = useState<SiteContent[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [contactInfo, setContactInfo] = useState<ContactInfo[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -63,15 +75,17 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    const [contentRes, servicesRes, contactRes] = await Promise.all([
+    const [contentRes, servicesRes, contactRes, projectsRes] = await Promise.all([
       supabase.from("site_content").select("*"),
       supabase.from("services").select("*").order("display_order"),
       supabase.from("contact_info").select("*").order("display_order"),
+      supabase.from("projects").select("*").order("display_order"),
     ]);
 
     if (contentRes.data) setContent(contentRes.data);
     if (servicesRes.data) setServices(servicesRes.data);
     if (contactRes.data) setContactInfo(contactRes.data);
+    if (projectsRes.data) setProjects(projectsRes.data);
 
     setLoading(false);
   };
@@ -222,6 +236,10 @@ const Admin = () => {
               <Wrench className="w-4 h-4" />
               Services
             </TabsTrigger>
+            <TabsTrigger value="projects" className="gap-2">
+              <Image className="w-4 h-4" />
+              Projekte
+            </TabsTrigger>
             <TabsTrigger value="contact" className="gap-2">
               <Phone className="w-4 h-4" />
               Contact
@@ -353,6 +371,17 @@ const Admin = () => {
                 ))}
               </div>
             </div>
+          </TabsContent>
+
+          {/* Projects Tab */}
+          <TabsContent value="projects">
+            <AdminProjectsTab
+              projects={projects}
+              setProjects={setProjects}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
           </TabsContent>
         </Tabs>
       </main>
