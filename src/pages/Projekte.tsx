@@ -20,32 +20,37 @@ const Projekte = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order");
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .eq("is_active", true)
+          .order("display_order");
 
-      if (error) {
-        console.error("Error fetching projects:", error);
-        // Fallback to static images
+        if (error) {
+          console.error("Error fetching projects:", error);
+          // Fallback to static images
+          setProjects(galleryImages);
+        } else if (data && data.length > 0) {
+          // Convert database projects to GalleryImage format
+          const dbProjects: GalleryImage[] = data.map((project) => ({
+            id: project.id,
+            src: project.image_url,
+            alt: project.description || project.title,
+            category: (project.category || "Straßenbau") as GalleryCategory,
+            title: project.title,
+          }));
+          setProjects(dbProjects);
+        } else {
+          // No projects in DB, use static images
+          setProjects(galleryImages);
+        }
+      } catch (err) {
+        console.error("Error in fetchProjects:", err);
         setProjects(galleryImages);
-      } else if (data && data.length > 0) {
-        // Convert database projects to GalleryImage format
-        const dbProjects: GalleryImage[] = data.map((project) => ({
-          id: project.id,
-          src: project.image_url,
-          alt: project.description || project.title,
-          category: (project.category || "Straßenbau") as GalleryCategory,
-          title: project.title,
-        }));
-        setProjects(dbProjects);
-      } else {
-        // No projects in DB, use static images
-        setProjects(galleryImages);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchProjects();
