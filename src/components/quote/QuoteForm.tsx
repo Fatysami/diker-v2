@@ -113,7 +113,7 @@ const QuoteForm = ({ defaultWorkType, onSuccess }: QuoteFormProps) => {
       });
 
       // Send to Formspree - you receive directly in your email
-      const formspreeResponse = await fetch("https://formspree.io/f/xwpobpvk", {
+      const formspreeResponse = await fetch("https://formspree.io/f/xwvlbqdq", {
         method: "POST",
         body: formData,
         headers: {
