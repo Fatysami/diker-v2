@@ -1,3 +1,4 @@
+import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -81,6 +82,13 @@ const services = [
 ];
 
 const Kanalbau = () => {
+  useSEOHead({
+    title: "Kanalbau & Dichtheitsprüfung Solingen | Rohrleitungen",
+    description: "Kanalbau & Dichtheitsprüfung in Solingen ✓ Abwasserleitungen ✓ Gasleitungen ✓ Wasserleitungen. Professionelle Prüfung nach DIN. Jetzt Termin vereinbaren!",
+    canonical: "https://diker-v2.lovable.app/kanalbau",
+    keywords: "Kanalbau Solingen, Dichtheitsprüfung NRW, Abwasserleitungen, Gasleitungen prüfen, Rohrleitungsbau",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />

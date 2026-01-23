@@ -1,3 +1,4 @@
+import { useSEOHead } from "@/hooks/useSEOHead";
 import { ArrowRight, Warehouse, Map, Grid3X3, Flower2, LayoutGrid, DoorOpen, Check, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -68,6 +69,13 @@ const services = [
 ];
 
 const GartenLandschaftsbau = () => {
+  useSEOHead({
+    title: "Garten- & Landschaftsbau Solingen | Terrassen & Pflaster",
+    description: "Garten- & Landschaftsbau in Solingen ✓ Terrassenbau ✓ Pflasterarbeiten ✓ Rollrasen ✓ Naturstein. Von der Planung bis zur Pflege. Kostenlose Beratung!",
+    canonical: "https://diker-v2.lovable.app/garten-landschaftsbau",
+    keywords: "Garten Landschaftsbau Solingen, Terrassenbau NRW, Pflasterarbeiten, Rollrasen, Naturstein Terrasse",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
