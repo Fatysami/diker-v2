@@ -93,38 +93,48 @@ const QuoteForm = ({ defaultWorkType, onSuccess }: QuoteFormProps) => {
     setIsSubmitting(true);
 
     try {
-      // Convert photos to base64 for email
-      const photoData: { name: string; data: string }[] = [];
-      for (const photo of photos) {
-        const base64 = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(photo);
-        });
-        photoData.push({
-          name: photo.name,
-          data: base64,
-        });
-      }
-
       const workTypeLabel = workTypes.find(t => t.value === data.workType)?.label || data.workType;
 
-      const { error } = await supabase.functions.invoke("send-quote-request", {
-        body: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          phone: data.phone,
-          email: data.email,
-          city: data.city,
-          workType: workTypeLabel,
-          description: data.description,
-          surface: data.surface,
-          deadline: data.deadline,
-          photos: photoData,
+      // Create FormData for Formspree (handles files natively)
+      const formData = new FormData();
+      formData.append("Vorname", data.firstName);
+      formData.append("Nachname", data.lastName);
+      formData.append("Telefon", data.phone);
+      formData.append("Email", data.email);
+      formData.append("Stadt", data.city);
+      formData.append("Art der Arbeiten", workTypeLabel);
+      formData.append("Beschreibung", data.description);
+      if (data.surface) formData.append("Fläche (m²)", data.surface);
+      if (data.deadline) formData.append("Gewünschter Zeitraum", data.deadline);
+      
+      // Add photos to FormData
+      photos.forEach((photo, index) => {
+        formData.append(`foto_${index + 1}`, photo);
+      });
+
+      // Send to Formspree - you receive directly in your email
+      const formspreeResponse = await fetch("https://formspree.io/f/xwpobpvk", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
         },
       });
 
-      if (error) throw error;
+      if (!formspreeResponse.ok) {
+        throw new Error("Formspree error");
+      }
+
+      // Send confirmation email to customer via Resend
+      await supabase.functions.invoke("send-quote-request", {
+        body: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          city: data.city,
+          workType: workTypeLabel,
+        },
+      });
 
       toast({
         title: "Anfrage erfolgreich gesendet!",

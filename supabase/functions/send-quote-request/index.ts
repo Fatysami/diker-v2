@@ -7,17 +7,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface QuoteRequest {
+interface ConfirmationRequest {
   firstName: string;
   lastName: string;
-  phone: string;
   email: string;
   city: string;
   workType: string;
-  description: string;
-  surface?: string;
-  deadline?: string;
-  photos?: { name: string; data: string }[];
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -27,106 +22,10 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const data: QuoteRequest = await req.json();
-    console.log("Received quote request:", { ...data, photos: data.photos?.length || 0 });
+    const data: ConfirmationRequest = await req.json();
+    console.log("Sending confirmation email to:", data.email);
 
-    // Build email HTML
-    const photoSection = data.photos && data.photos.length > 0
-      ? `<h3>Anhänge</h3><p>${data.photos.length} Foto(s) angehängt</p>`
-      : "";
-
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-          .content { background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
-          .field { margin-bottom: 15px; }
-          .label { font-weight: bold; color: #4b5563; }
-          .value { margin-top: 5px; }
-          .footer { background: #1f2937; color: white; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1 style="margin: 0;">Neue Angebotsanfrage</h1>
-            <p style="margin: 10px 0 0 0;">Diker Straßenbau</p>
-          </div>
-          <div class="content">
-            <h2>Kontaktdaten</h2>
-            <div class="field">
-              <div class="label">Name:</div>
-              <div class="value">${data.firstName} ${data.lastName}</div>
-            </div>
-            <div class="field">
-              <div class="label">Telefon:</div>
-              <div class="value"><a href="tel:${data.phone}">${data.phone}</a></div>
-            </div>
-            <div class="field">
-              <div class="label">E-Mail:</div>
-              <div class="value"><a href="mailto:${data.email}">${data.email}</a></div>
-            </div>
-            <div class="field">
-              <div class="label">Ort des Projekts:</div>
-              <div class="value">${data.city}</div>
-            </div>
-
-            <h2>Projektdetails</h2>
-            <div class="field">
-              <div class="label">Art der Arbeiten:</div>
-              <div class="value">${data.workType}</div>
-            </div>
-            <div class="field">
-              <div class="label">Beschreibung:</div>
-              <div class="value">${data.description}</div>
-            </div>
-            ${data.surface ? `
-            <div class="field">
-              <div class="label">Geschätzte Fläche:</div>
-              <div class="value">${data.surface} m²</div>
-            </div>
-            ` : ""}
-            ${data.deadline ? `
-            <div class="field">
-              <div class="label">Gewünschter Zeitraum:</div>
-              <div class="value">${data.deadline}</div>
-            </div>
-            ` : ""}
-            ${photoSection}
-          </div>
-          <div class="footer">
-            <p>Diese Anfrage wurde über das Kontaktformular auf der Website gesendet.</p>
-            <p>Datum: ${new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })}</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Prepare attachments if photos exist
-    const attachments = data.photos?.map((photo, index) => ({
-      filename: photo.name || `foto-${index + 1}.jpg`,
-      content: photo.data.split(",")[1], // Remove data URL prefix
-    })) || [];
-
-    // Send email to company
-    const emailResponse = await resend.emails.send({
-      from: "Diker Straßenbau <onboarding@resend.dev>",
-      to: ["info@dikerstrassenbau.de"],
-      reply_to: data.email,
-      subject: `Neue Anfrage: ${data.workType} - ${data.firstName} ${data.lastName}`,
-      html: htmlContent,
-      attachments: attachments.length > 0 ? attachments : undefined,
-    });
-
-    console.log("Email sent to company:", emailResponse);
-
-    // Send confirmation email to customer
+    // Send confirmation email to customer only
     const confirmationHtml = `
       <!DOCTYPE html>
       <html>
@@ -166,17 +65,17 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    await resend.emails.send({
+    const emailResponse = await resend.emails.send({
       from: "Diker Straßenbau <onboarding@resend.dev>",
       to: [data.email],
       subject: "Ihre Anfrage bei Diker Straßenbau",
       html: confirmationHtml,
     });
 
-    console.log("Confirmation email sent to customer");
+    console.log("Confirmation email sent:", emailResponse);
 
     return new Response(
-      JSON.stringify({ success: true, message: "Quote request sent successfully" }),
+      JSON.stringify({ success: true, message: "Confirmation email sent" }),
       {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
