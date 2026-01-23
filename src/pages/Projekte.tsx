@@ -1,9 +1,17 @@
+import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
 import { galleryImages } from "@/components/gallery/GalleryData";
 
 const Projekte = () => {
+  useSEOHead({
+    title: "Referenzprojekte & Galerie | Diker Straßenbau Solingen",
+    description: "Entdecken Sie unsere erfolgreich abgeschlossenen Bauprojekte in Solingen und Umgebung. Straßenbau, Tiefbau, Kanalbau und Garten-Landschaftsbau Referenzen.",
+    canonical: "https://diker-v2.lovable.app/projekte",
+    keywords: "Bauprojekte Solingen, Straßenbau Referenzen, Tiefbau Galerie, Pflasterarbeiten Beispiele",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />

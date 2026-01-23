@@ -1,3 +1,4 @@
+import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,13 @@ const services = [
 ];
 
 const Tiefbau = () => {
+  useSEOHead({
+    title: "Tiefbau Solingen | Erdarbeiten & Fundamente",
+    description: "Professioneller Tiefbau in Solingen ✓ Erdarbeiten ✓ Fundamente ✓ Baugründung ✓ Kanalbau. Erfahrenes Team & modernste Technik. Jetzt Angebot anfordern!",
+    canonical: "https://diker-v2.lovable.app/tiefbau",
+    keywords: "Tiefbau Solingen, Erdarbeiten NRW, Fundamente, Baugründung, Tiefbauunternehmen, Baugrube",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />

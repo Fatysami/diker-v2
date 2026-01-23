@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
+import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QuoteForm from "@/components/quote/QuoteForm";
 import { Button } from "@/components/ui/button";
 
 const Anfrage = () => {
+  useSEOHead({
+    title: "Kostenloses Angebot anfordern | Diker Straßenbau",
+    description: "Fordern Sie jetzt ein kostenloses und unverbindliches Angebot für Ihr Bauprojekt an. Straßenbau, Tiefbau, Kanalbau in Solingen. Antwort innerhalb 24-48h!",
+    canonical: "https://diker-v2.lovable.app/anfrage",
+    keywords: "Angebot Straßenbau, kostenlose Beratung, Bauanfrage Solingen, Tiefbau Angebot",
+  });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState(false);

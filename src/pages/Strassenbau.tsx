@@ -1,3 +1,4 @@
+import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,13 @@ const services = [
 ];
 
 const Strassenbau = () => {
+  useSEOHead({
+    title: "Straßenbau Solingen | Asphaltierung & Pflasterarbeiten",
+    description: "Professioneller Straßenbau in Solingen ✓ Parkplätze ✓ Fahrradwege ✓ Asphaltierung ✓ Pflasterarbeiten. Kompetentes Team & moderne Ausstattung. Jetzt anfragen!",
+    canonical: "https://diker-v2.lovable.app/strassenbau",
+    keywords: "Straßenbau Solingen, Asphaltierung NRW, Pflasterarbeiten, Parkplatzbau, Fahrradwege, Straßenbauunternehmen",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
