@@ -95,7 +95,7 @@ const QuoteForm = ({ defaultWorkType, onSuccess }: QuoteFormProps) => {
     try {
       const workTypeLabel = workTypes.find(t => t.value === data.workType)?.label || data.workType;
 
-      // Create FormData for Formspree (handles files natively)
+      // Create FormData for Formspree (without files - free plan doesn't support them)
       const formData = new FormData();
       formData.append("Vorname", data.firstName);
       formData.append("Nachname", data.lastName);
@@ -106,11 +106,9 @@ const QuoteForm = ({ defaultWorkType, onSuccess }: QuoteFormProps) => {
       formData.append("Beschreibung", data.description);
       if (data.surface) formData.append("Fläche (m²)", data.surface);
       if (data.deadline) formData.append("Gewünschter Zeitraum", data.deadline);
-      
-      // Add photos to FormData
-      photos.forEach((photo, index) => {
-        formData.append(`foto_${index + 1}`, photo);
-      });
+      if (photos.length > 0) {
+        formData.append("Anzahl Fotos", `${photos.length} Foto(s) hochgeladen`);
+      }
 
       // Send to Formspree - you receive directly in your email
       const formspreeResponse = await fetch("https://formspree.io/f/xwvlbqdq", {
