@@ -93,46 +93,39 @@ const QuoteForm = ({ defaultWorkType, onSuccess }: QuoteFormProps) => {
     setIsSubmitting(true);
 
     try {
+      // Convert photos to base64 for email attachments
+      const photoData: { name: string; data: string }[] = [];
+      for (const photo of photos) {
+        const base64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(photo);
+        });
+        photoData.push({
+          name: photo.name,
+          data: base64,
+        });
+      }
+
       const workTypeLabel = workTypes.find(t => t.value === data.workType)?.label || data.workType;
 
-      // Create FormData for Formspree (without files - free plan doesn't support them)
-      const formData = new FormData();
-      formData.append("Vorname", data.firstName);
-      formData.append("Nachname", data.lastName);
-      formData.append("Telefon", data.phone);
-      formData.append("Email", data.email);
-      formData.append("Stadt", data.city);
-      formData.append("Art der Arbeiten", workTypeLabel);
-      formData.append("Beschreibung", data.description);
-      if (data.surface) formData.append("Fläche (m²)", data.surface);
-      if (data.deadline) formData.append("Gewünschter Zeitraum", data.deadline);
-      if (photos.length > 0) {
-        formData.append("Anzahl Fotos", `${photos.length} Foto(s) hochgeladen`);
-      }
-
-      // Send to Formspree - you receive directly in your email
-      const formspreeResponse = await fetch("https://formspree.io/f/xwvlbqdq", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      if (!formspreeResponse.ok) {
-        throw new Error("Formspree error");
-      }
-
-      // Send confirmation email to customer via Resend
-      await supabase.functions.invoke("send-quote-request", {
+      // Send via Resend edge function with photos as attachments
+      const { error } = await supabase.functions.invoke("send-quote-request", {
         body: {
           firstName: data.firstName,
           lastName: data.lastName,
+          phone: data.phone,
           email: data.email,
           city: data.city,
           workType: workTypeLabel,
+          description: data.description,
+          surface: data.surface,
+          deadline: data.deadline,
+          photos: photoData,
         },
       });
+
+      if (error) throw error;
 
       toast({
         title: "Anfrage erfolgreich gesendet!",
