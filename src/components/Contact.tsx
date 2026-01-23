@@ -1,7 +1,10 @@
-import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Phone, Mail, Clock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
   {
@@ -29,6 +32,64 @@ const contactInfo = [
 ];
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const { toast } = useToast();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({
+        title: "Pflichtfelder fehlen",
+        description: "Bitte füllen Sie Name, E-Mail und Nachricht aus.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-message", {
+        body: formData,
+      });
+
+      if (error) throw error;
+
+      setIsSuccess(true);
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+      
+      toast({
+        title: "Nachricht gesendet!",
+        description: "Vielen Dank! Wir melden uns schnellstmöglich bei Ihnen.",
+      });
+
+      // Reset success state after 5 seconds
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (error) {
+      console.error("Error sending contact message:", error);
+      toast({
+        title: "Fehler beim Senden",
+        description: "Bitte versuchen Sie es später erneut oder kontaktieren Sie uns telefonisch.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="kontakt" className="section-padding bg-background">
       <div className="container-custom">
@@ -52,49 +113,106 @@ const Contact = () => {
             <h3 className="text-2xl font-bold text-card-foreground mb-6">
               Anfrage senden
             </h3>
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-card-foreground mb-2">
-                    Name *
-                  </label>
-                  <Input placeholder="Ihr vollständiger Name" />
+            
+            {isSuccess ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-primary" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-card-foreground mb-2">
-                    E-Mail *
-                  </label>
-                  <Input type="email" placeholder="ihre@email.de" />
-                </div>
+                <h4 className="text-xl font-semibold text-card-foreground mb-2">
+                  Nachricht gesendet!
+                </h4>
+                <p className="text-muted-foreground">
+                  Wir melden uns schnellstmöglich bei Ihnen.
+                </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-card-foreground mb-2">
-                    Telefon
-                  </label>
-                  <Input type="tel" placeholder="Ihre Telefonnummer" />
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">
+                      Name *
+                    </label>
+                    <Input 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Ihr vollständiger Name" 
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">
+                      E-Mail *
+                    </label>
+                    <Input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="ihre@email.de" 
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">
+                      Telefon
+                    </label>
+                    <Input 
+                      type="tel" 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Ihre Telefonnummer" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-card-foreground mb-2">
+                      Betreff
+                    </label>
+                    <Input 
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      placeholder="z.B. Straßenbau Projekt" 
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-card-foreground mb-2">
-                    Betreff
+                    Nachricht *
                   </label>
-                  <Input placeholder="z.B. Straßenbau Projekt" />
+                  <Textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Beschreiben Sie Ihr Projekt oder Ihre Anfrage..."
+                    rows={5}
+                    required
+                  />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-card-foreground mb-2">
-                  Nachricht *
-                </label>
-                <Textarea
-                  placeholder="Beschreiben Sie Ihr Projekt oder Ihre Anfrage..."
-                  rows={5}
-                />
-              </div>
-              <Button size="lg" className="w-full md:w-auto group">
-                Nachricht senden
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </form>
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="w-full md:w-auto group"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                      Wird gesendet...
+                    </>
+                  ) : (
+                    <>
+                      Nachricht senden
+                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            )}
           </div>
 
           {/* Contact Info */}
