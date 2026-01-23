@@ -36,7 +36,7 @@ const services = [
       "Gestaltung von Außenanlagen mit Naturstein, Bepflanzung und modernem Design.",
     image: gartenImg,
     features: ["Naturstein", "Bepflanzung", "Terrassen"],
-    link: null,
+    link: "/garten-landschaftsbau",
   },
 ];
 
