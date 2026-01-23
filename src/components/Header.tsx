@@ -20,6 +20,7 @@ const Header = () => {
   const navLinks = [
     { href: isHomePage ? "#home" : "/", label: "Home", isAnchor: isHomePage },
     { href: isHomePage ? "#leistungen" : "/#leistungen", label: "Leistungen", isAnchor: isHomePage },
+    { href: "/projekte", label: "Projekte", isAnchor: false },
     { href: isHomePage ? "#ueber-uns" : "/#ueber-uns", label: "Über Uns", isAnchor: isHomePage },
     { href: isHomePage ? "#kontakt" : "/#kontakt", label: "Kontakt", isAnchor: isHomePage },
   ];
