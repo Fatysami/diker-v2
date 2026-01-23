@@ -82,8 +82,8 @@ const Tiefbau = () => {
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
-                <Link to="/#kontakt">
-                  Kontakt aufnehmen
+                <Link to="/anfrage?leistung=tiefbau">
+                  Jetzt Angebot anfordern
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>

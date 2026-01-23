@@ -1,5 +1,6 @@
 import { ArrowRight, Warehouse, Map, Grid3X3, Flower2, LayoutGrid, DoorOpen, Check, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import gartenImg from "@/assets/service-garten.jpg";
@@ -100,12 +101,12 @@ const GartenLandschaftsbau = () => {
             <Button
               size="lg"
               className="group"
-              onClick={() => {
-                document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
-              }}
+              asChild
             >
-              Kostenlose Beratung
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Link to="/anfrage?leistung=garten-landschaftsbau">
+                Jetzt Angebot anfordern
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
           </div>
         </div>
@@ -205,12 +206,12 @@ const GartenLandschaftsbau = () => {
             <Button
               size="lg"
               className="group"
-              onClick={() => {
-                window.location.href = "/#kontakt";
-              }}
+              asChild
             >
-              Jetzt Kontakt aufnehmen
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Link to="/anfrage?leistung=garten-landschaftsbau">
+                Jetzt Angebot anfordern
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
           </div>
         </div>

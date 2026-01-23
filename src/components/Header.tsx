@@ -96,7 +96,7 @@ const Header = () => {
               <span className="text-sm font-medium">0212 22 66 39 31</span>
             </a>
             <Button variant="default" size="sm" asChild>
-              <Link to="/#kontakt">Jetzt anfragen</Link>
+              <Link to="/anfrage">Jetzt Angebot anfordern</Link>
             </Button>
           </div>
 
@@ -138,7 +138,7 @@ const Header = () => {
                 )
               ))}
               <Button variant="default" size="sm" className="w-fit" asChild>
-                <Link to="/#kontakt">Jetzt anfragen</Link>
+                <Link to="/anfrage">Jetzt Angebot anfordern</Link>
               </Button>
             </div>
           </nav>

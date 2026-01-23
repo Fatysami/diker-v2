@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-construction.jpg";
 
 const Hero = () => {
@@ -66,10 +67,10 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: "0.4s" }}>
             <Button size="lg" className="group" asChild>
-              <a href="#kontakt">
-                Kostenlose Beratung
+              <Link to="/anfrage">
+                Jetzt Angebot anfordern
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
             </Button>
             <Button variant="heroOutline" size="lg" asChild>
               <a href="#leistungen">Unsere Leistungen</a>
