@@ -117,7 +117,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company with attachments
     const emailResponse = await resend.emails.send({
       from: "Diker Straßenbau <onboarding@resend.dev>",
-      to: [data.email], // For testing, send to customer email (change to info@dikerstrassenbau.de after domain verification)
+      to: ["info@dikerstrassenbau.de"],
       reply_to: data.email,
       subject: `Neue Anfrage: ${data.workType} - ${data.firstName} ${data.lastName}`,
       html: htmlContent,
