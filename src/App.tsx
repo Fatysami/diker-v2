@@ -12,6 +12,7 @@ import Strassenbau from "./pages/Strassenbau";
 import Tiefbau from "./pages/Tiefbau";
 import Kanalbau from "./pages/Kanalbau";
 import GartenLandschaftsbau from "./pages/GartenLandschaftsbau";
+import Projekte from "./pages/Projekte";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/tiefbau" element={<Tiefbau />} />
             <Route path="/kanalbau" element={<Kanalbau />} />
             <Route path="/garten-landschaftsbau" element={<GartenLandschaftsbau />} />
+            <Route path="/projekte" element={<Projekte />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
