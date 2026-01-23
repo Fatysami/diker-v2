@@ -8,8 +8,8 @@ import { galleryImages, GalleryImage, GalleryCategory } from "@/components/galle
 import { Loader2 } from "lucide-react";
 
 const Projekte = () => {
-  const [projects, setProjects] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<GalleryImage[]>(galleryImages);
+  const [loading, setLoading] = useState(false);
 
   useSEOHead({
     title: "Referenzprojekte & Galerie | Diker Straßenbau Solingen",
@@ -20,6 +20,7 @@ const Projekte = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
+      console.log("Fetching projects from Supabase...");
       try {
         const { data, error } = await supabase
           .from("projects")
@@ -27,11 +28,14 @@ const Projekte = () => {
           .eq("is_active", true)
           .order("display_order");
 
+        console.log("Supabase response:", { data, error });
+
         if (error) {
           console.error("Error fetching projects:", error);
-          // Fallback to static images
-          setProjects(galleryImages);
-        } else if (data && data.length > 0) {
+          return; // Keep static images
+        }
+        
+        if (data && data.length > 0) {
           // Convert database projects to GalleryImage format
           const dbProjects: GalleryImage[] = data.map((project) => ({
             id: project.id,
@@ -41,15 +45,10 @@ const Projekte = () => {
             title: project.title,
           }));
           setProjects(dbProjects);
-        } else {
-          // No projects in DB, use static images
-          setProjects(galleryImages);
+          console.log("Projects loaded from DB:", dbProjects.length);
         }
       } catch (err) {
         console.error("Error in fetchProjects:", err);
-        setProjects(galleryImages);
-      } finally {
-        setLoading(false);
       }
     };
 
