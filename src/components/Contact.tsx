@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const contactInfo = [
   {
@@ -42,6 +44,8 @@ const Contact = () => {
     message: "",
   });
   const { toast } = useToast();
+  const formRef = useRef(null);
+  const isFormInView = useInView(formRef, { once: true, margin: "-50px" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,7 +98,13 @@ const Contact = () => {
     <section id="kontakt" className="section-padding bg-background">
       <div className="container-custom">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4">
             Kontakt
           </span>
@@ -105,27 +115,42 @@ const Contact = () => {
             Kontaktieren Sie uns für eine kostenlose Beratung. 
             Wir freuen uns auf Ihr Projekt!
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
           {/* Contact Form */}
-          <div className="lg:col-span-3 bg-card rounded-2xl p-8 border border-border">
+          <motion.div 
+            ref={formRef}
+            initial={{ opacity: 0, x: -50 }}
+            animate={isFormInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-3 bg-card rounded-2xl p-8 border border-border"
+          >
             <h3 className="text-2xl font-bold text-card-foreground mb-6">
               Anfrage senden
             </h3>
             
             {isSuccess ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center py-12 text-center"
+              >
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                  className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4"
+                >
                   <CheckCircle2 className="w-8 h-8 text-primary" />
-                </div>
+                </motion.div>
                 <h4 className="text-xl font-semibold text-card-foreground mb-2">
                   Nachricht gesendet!
                 </h4>
                 <p className="text-muted-foreground">
                   Wir melden uns schnellstmöglich bei Ihnen.
                 </p>
-              </div>
+              </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,6 +164,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Ihr vollständiger Name" 
                       required
+                      className="transition-all duration-300 focus:scale-[1.01]"
                     />
                   </div>
                   <div>
@@ -152,6 +178,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="ihre@email.de" 
                       required
+                      className="transition-all duration-300 focus:scale-[1.01]"
                     />
                   </div>
                 </div>
@@ -166,6 +193,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="Ihre Telefonnummer" 
+                      className="transition-all duration-300 focus:scale-[1.01]"
                     />
                   </div>
                   <div>
@@ -177,6 +205,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="z.B. Straßenbau Projekt" 
+                      className="transition-all duration-300 focus:scale-[1.01]"
                     />
                   </div>
                 </div>
@@ -191,6 +220,7 @@ const Contact = () => {
                     placeholder="Beschreiben Sie Ihr Projekt oder Ihre Anfrage..."
                     rows={5}
                     required
+                    className="transition-all duration-300 focus:scale-[1.01]"
                   />
                 </div>
                 <Button 
@@ -213,19 +243,28 @@ const Contact = () => {
                 </Button>
               </form>
             )}
-          </div>
+          </motion.div>
 
           {/* Contact Info */}
           <div className="lg:col-span-2 space-y-6">
-            {contactInfo.map((item) => (
-              <div
+            {contactInfo.map((item, index) => (
+              <motion.div
                 key={item.title}
-                className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-colors"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02, x: -5 }}
+                className="bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-colors cursor-default"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <motion.div 
+                    className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    whileHover={{ rotate: 5, scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
                     <item.icon className="w-5 h-5 text-primary" />
-                  </div>
+                  </motion.div>
                   <div>
                     <h4 className="font-semibold text-card-foreground mb-1">
                       {item.title}
@@ -242,11 +281,17 @@ const Contact = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
 
-            {/* Map Placeholder */}
-            <div className="bg-muted rounded-xl h-48 flex items-center justify-center border border-border overflow-hidden">
+            {/* Map */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-muted rounded-xl h-48 flex items-center justify-center border border-border overflow-hidden"
+            >
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2508.844899285567!2d7.0823!3d51.1657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8d683b3e2d9e7%3A0x4e2c1c9c9c9c9c9c!2sWittkuller%20Str.%20161%2C%2042719%20Solingen!5e0!3m2!1sde!2sde!4v1699999999999!5m2!1sde!2sde"
                 width="100%"
@@ -257,7 +302,7 @@ const Contact = () => {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Standort Diker Straßenbau"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
