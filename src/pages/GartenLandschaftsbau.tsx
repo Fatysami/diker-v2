@@ -72,7 +72,7 @@ const GartenLandschaftsbau = () => {
   useSEOHead({
     title: "Garten- & Landschaftsbau Solingen | Terrassen & Pflaster",
     description: "Garten- & Landschaftsbau in Solingen ✓ Terrassenbau ✓ Pflasterarbeiten ✓ Rollrasen ✓ Naturstein. Von der Planung bis zur Pflege. Kostenlose Beratung!",
-    canonical: "https://diker-v2.lovable.app/garten-landschaftsbau",
+    canonical: "https://www.dikerstrassenbau.de/garten-landschaftsbau",
     keywords: "Garten Landschaftsbau Solingen, Terrassenbau NRW, Pflasterarbeiten, Rollrasen, Naturstein Terrasse",
   });
 

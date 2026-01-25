@@ -6,7 +6,7 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://diker-v2.lovable.app/</loc>
+    <loc>https://www.dikerstrassenbau.de/</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
   
   <!-- Straßenbau -->
   <url>
-    <loc>https://diker-v2.lovable.app/strassenbau</loc>
+    <loc>https://www.dikerstrassenbau.de/strassenbau</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -22,7 +22,7 @@
   
   <!-- Tiefbau -->
   <url>
-    <loc>https://diker-v2.lovable.app/tiefbau</loc>
+    <loc>https://www.dikerstrassenbau.de/tiefbau</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -30,7 +30,7 @@
   
   <!-- Kanalbau -->
   <url>
-    <loc>https://diker-v2.lovable.app/kanalbau</loc>
+    <loc>https://www.dikerstrassenbau.de/kanalbau</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -38,7 +38,7 @@
   
   <!-- Garten & Landschaftsbau -->
   <url>
-    <loc>https://diker-v2.lovable.app/garten-landschaftsbau</loc>
+    <loc>https://www.dikerstrassenbau.de/garten-landschaftsbau</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -46,7 +46,7 @@
   
   <!-- Projekte / Galerie -->
   <url>
-    <loc>https://diker-v2.lovable.app/projekte</loc>
+    <loc>https://www.dikerstrassenbau.de/projekte</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -54,10 +54,10 @@
   
   <!-- Anfrage / Devis -->
   <url>
-    <loc>https://diker-v2.lovable.app/anfrage</loc>
+    <loc>https://www.dikerstrassenbau.de/anfrage</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
 </urlset>
