@@ -11,7 +11,7 @@ const Index = () => {
   useSEOHead({
     title: "Diker Straßenbau | Straßenbau & Tiefbau in Solingen",
     description: "Ihr Straßenbauunternehmen in Solingen ✓ Straßenbau ✓ Tiefbau ✓ Kanalbau ✓ Garten- & Landschaftsbau. Über 15 Jahre Erfahrung. Jetzt kostenloses Angebot anfordern!",
-    canonical: "https://diker-v2.lovable.app/",
+    canonical: "https://www.dikerstrassenbau.de/",
     keywords: "Straßenbau Solingen, Tiefbau Solingen, Kanalbau NRW, Pflasterarbeiten, Asphaltierung, Bauunternehmen Solingen",
   });
   return (

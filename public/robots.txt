@@ -1,5 +1,5 @@
 # Robots.txt for Diker Straßenbau
-# https://diker-v2.lovable.app
+# https://www.dikerstrassenbau.de
 
 User-agent: Googlebot
 Allow: /
@@ -9,13 +9,13 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-User-agent: Twitterbot
+User-agent: DuckDuckBot
 Allow: /
 
-User-agent: facebookexternalhit
+User-agent: Yandex
 Allow: /
 
-User-agent: LinkedInBot
+User-agent: facebot
 Allow: /
 
 User-agent: *
@@ -25,4 +25,4 @@ Disallow: /admin/login
 Disallow: /admin/setup
 
 # Sitemap location
-Sitemap: https://diker-v2.lovable.app/sitemap.xml
+Sitemap: https://www.dikerstrassenbau.de/sitemap.xml
