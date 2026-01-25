@@ -11,7 +11,7 @@ export type GalleryCategory =
   | "Straßenbau"
   | "Tiefbau"
   | "Kanalbau"
-  | "Garten";
+  | "Garten- & Landschaftsbau";
 
 export interface GalleryImage {
   id: string;
@@ -47,21 +47,21 @@ export const galleryImages: GalleryImage[] = [
     id: "garten-1",
     src: garten1,
     alt: "Rollrasen Verlegung",
-    category: "Garten",
+    category: "Garten- & Landschaftsbau",
     title: "Rollrasen – Professionelle Verlegung",
   },
   {
     id: "garten-2",
     src: garten2,
     alt: "Fertiger Garten mit Gewächshaus",
-    category: "Garten",
+    category: "Garten- & Landschaftsbau",
     title: "Gartengestaltung mit Wegführung",
   },
   {
     id: "garten-3",
     src: garten3,
     alt: "Außenanlage mit Mulch und Treppe",
-    category: "Garten",
+    category: "Garten- & Landschaftsbau",
     title: "Neugestaltung Außenanlage",
   },
 ];
@@ -71,5 +71,5 @@ export const categories: GalleryCategory[] = [
   "Straßenbau",
   "Tiefbau",
   "Kanalbau",
-  "Garten",
+  "Garten- & Landschaftsbau",
 ];
