@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction 
+  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction, MessageSquare, Info
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
@@ -18,6 +18,8 @@ import AdminTiefbauTab from "@/components/admin/AdminTiefbauTab";
 import AdminStrassenbauTab from "@/components/admin/AdminStrassenbauTab";
 import AdminServicesTab from "@/components/admin/AdminServicesTab";
 import AdminContactTab from "@/components/admin/AdminContactTab";
+import AdminTestimonialsTab from "@/components/admin/AdminTestimonialsTab";
+import AdminAboutTab from "@/components/admin/AdminAboutTab";
 
 interface SiteContent {
   id: string;
@@ -122,6 +124,8 @@ const Admin = () => {
   const [kanalbauSections, setKanalbauSections] = useState<KanalbauSection[]>([]);
   const [tiefbauSections, setTiefbauSections] = useState<TiefbauSection[]>([]);
   const [strassenbauSections, setStrassenbauSections] = useState<StrassenbauSection[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [aboutStats, setAboutStats] = useState<any[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -139,7 +143,7 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes, kanalbauRes, tiefbauRes, strassenbauRes] = await Promise.all([
+    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes, kanalbauRes, tiefbauRes, strassenbauRes, testimonialsRes, aboutStatsRes] = await Promise.all([
       supabase.from("site_content").select("*"),
       supabase.from("services").select("*").order("display_order"),
       supabase.from("contact_info").select("*").order("display_order"),
@@ -148,6 +152,8 @@ const Admin = () => {
       supabase.from("kanalbau_sections").select("*").order("display_order"),
       supabase.from("tiefbau_sections").select("*").order("display_order"),
       supabase.from("strassenbau_sections").select("*").order("display_order"),
+      supabase.from("testimonials").select("*").order("display_order"),
+      supabase.from("about_stats").select("*").order("display_order"),
     ]);
 
     if (contentRes.data) setContent(contentRes.data);
@@ -158,6 +164,8 @@ const Admin = () => {
     if (kanalbauRes.data) setKanalbauSections(kanalbauRes.data);
     if (tiefbauRes.data) setTiefbauSections(tiefbauRes.data);
     if (strassenbauRes.data) setStrassenbauSections(strassenbauRes.data);
+    if (testimonialsRes.data) setTestimonials(testimonialsRes.data);
+    if (aboutStatsRes.data) setAboutStats(aboutStatsRes.data);
 
     setLoading(false);
   };
@@ -279,6 +287,14 @@ const Admin = () => {
               <Phone className="w-4 h-4" />
               Contact
             </TabsTrigger>
+            <TabsTrigger value="about" className="gap-2">
+              <Info className="w-4 h-4" />
+              Über Uns
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Témoignages
+            </TabsTrigger>
           </TabsList>
 
           {/* Content Tab */}
@@ -392,6 +408,30 @@ const Admin = () => {
             <AdminStrassenbauTab
               sections={strassenbauSections}
               setSections={setStrassenbauSections}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* About Tab */}
+          <TabsContent value="about">
+            <AdminAboutTab
+              stats={aboutStats}
+              setStats={setAboutStats}
+              content={content}
+              setContent={setContent}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* Testimonials Tab */}
+          <TabsContent value="testimonials">
+            <AdminTestimonialsTab
+              testimonials={testimonials}
+              setTestimonials={setTestimonials}
               saving={saving}
               setSaving={setSaving}
               onRefresh={fetchData}

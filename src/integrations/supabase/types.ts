@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_stats: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          label: string
+          stat_key: string
+          stat_suffix: string | null
+          stat_value: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          label: string
+          stat_key: string
+          stat_suffix?: string | null
+          stat_value: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string
+          stat_key?: string
+          stat_suffix?: string | null
+          stat_value?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_profiles: {
         Row: {
           created_at: string
@@ -304,6 +343,51 @@ export type Database = {
           is_active?: boolean
           paragraphs?: string[]
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          client_name: string
+          company: string | null
+          content: string
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          is_featured: boolean | null
+          rating: number | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_name: string
+          company?: string | null
+          content: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean | null
+          rating?: number | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_name?: string
+          company?: string | null
+          content?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean | null
+          rating?: number | null
+          role?: string | null
           updated_at?: string
         }
         Relationships: []
