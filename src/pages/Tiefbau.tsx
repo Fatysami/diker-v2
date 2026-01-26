@@ -130,7 +130,7 @@ const Tiefbau = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="flex flex-col gap-8">
             {features.map((feature, index) => (
               <div 
                 key={feature.title}
