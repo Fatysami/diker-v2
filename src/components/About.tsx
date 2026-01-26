@@ -1,32 +1,24 @@
-import { Award, Clock, Users, Wrench } from "lucide-react";
+import { Award, Clock, Users, Wrench, CheckCircle, ThumbsUp } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { useAboutStats } from "@/hooks/useAboutStats";
 
-const stats = [
-  {
-    icon: Clock,
-    value: 20,
-    suffix: "+",
-    label: "Jahre Erfahrung",
-  },
-  {
-    icon: Users,
-    value: 500,
-    suffix: "+",
-    label: "Zufriedene Kunden",
-  },
-  {
-    icon: Award,
-    value: 100,
-    suffix: "%",
-    label: "Qualitätsgarantie",
-  },
-  {
-    icon: Wrench,
-    value: 50,
-    suffix: "+",
-    label: "Moderne Maschinen",
-  },
+// Icon mapping for dynamic icons
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Award,
+  Clock,
+  Users,
+  Wrench,
+  CheckCircle,
+  ThumbsUp,
+};
+
+// Fallback stats if database is empty
+const fallbackStats = [
+  { id: "1", stat_value: "20", stat_suffix: "+", label: "Jahre Erfahrung", icon: "Clock", display_order: 1 },
+  { id: "2", stat_value: "500", stat_suffix: "+", label: "Zufriedene Kunden", icon: "Users", display_order: 2 },
+  { id: "3", stat_value: "100", stat_suffix: "%", label: "Qualitätsgarantie", icon: "Award", display_order: 3 },
+  { id: "4", stat_value: "50", stat_suffix: "+", label: "Moderne Maschinen", icon: "Wrench", display_order: 4 },
 ];
 
 // Animated counter component
@@ -70,6 +62,10 @@ const Counter = ({ value, suffix, duration = 2000 }: { value: number; suffix: st
 const About = () => {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const { data: dbStats, isLoading } = useAboutStats();
+
+  // Use database stats or fallback
+  const stats = dbStats && dbStats.length > 0 ? dbStats : fallbackStats;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -153,29 +149,34 @@ const About = () => {
             animate={isInView ? "visible" : "hidden"}
             className="grid grid-cols-2 gap-6"
           >
-            {stats.map((stat) => (
-              <motion.div
-                key={stat.label}
-                variants={itemVariants}
-                whileHover={{ scale: 1.03, y: -5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="bg-secondary-foreground/5 backdrop-blur-sm rounded-2xl p-6 lg:p-8 border border-secondary-foreground/10 hover:border-primary/50 transition-colors cursor-default"
-              >
-                <motion.div 
-                  className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center mb-4"
-                  whileHover={{ rotate: 5, scale: 1.1 }}
+            {stats.map((stat) => {
+              const IconComponent = iconMap[stat.icon] || Award;
+              const numericValue = parseInt(stat.stat_value) || 0;
+              
+              return (
+                <motion.div
+                  key={stat.id}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.03, y: -5 }}
                   transition={{ type: "spring", stiffness: 300 }}
+                  className="bg-secondary-foreground/5 backdrop-blur-sm rounded-2xl p-6 lg:p-8 border border-secondary-foreground/10 hover:border-primary/50 transition-colors cursor-default"
                 >
-                  <stat.icon className="w-6 h-6 text-primary" />
+                  <motion.div 
+                    className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center mb-4"
+                    whileHover={{ rotate: 5, scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <IconComponent className="w-6 h-6 text-primary" />
+                  </motion.div>
+                  <div className="text-3xl lg:text-4xl font-bold text-secondary-foreground mb-1">
+                    <Counter value={numericValue} suffix={stat.stat_suffix} />
+                  </div>
+                  <div className="text-secondary-foreground/60 text-sm">
+                    {stat.label}
+                  </div>
                 </motion.div>
-                <div className="text-3xl lg:text-4xl font-bold text-secondary-foreground mb-1">
-                  <Counter value={stat.value} suffix={stat.suffix} />
-                </div>
-                <div className="text-secondary-foreground/60 text-sm">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+              );
+            })}
           </motion.div>
         </div>
       </div>
