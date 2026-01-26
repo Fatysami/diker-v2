@@ -203,11 +203,13 @@ const Admin = () => {
     );
   }
 
-  const groupedContent = content.reduce((acc, item) => {
-    if (!acc[item.section]) acc[item.section] = [];
-    acc[item.section].push(item);
-    return acc;
-  }, {} as Record<string, SiteContent[]>);
+  const groupedContent = content
+    .filter(item => item.section !== 'contact') // Exclude contact section (handled in Contact tab)
+    .reduce((acc, item) => {
+      if (!acc[item.section]) acc[item.section] = [];
+      acc[item.section].push(item);
+      return acc;
+    }, {} as Record<string, SiteContent[]>);
 
   return (
     <div className="min-h-screen bg-secondary">
