@@ -68,6 +68,42 @@ export type Database = {
         }
         Relationships: []
       }
+      garten_projects: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          icon: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          icon?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           category: string | null

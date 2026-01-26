@@ -8,10 +8,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2 
+  FileText, Wrench, Image, Phone, Loader2, Leaf 
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
+import AdminGartenProjectsTab from "@/components/admin/AdminGartenProjectsTab";
 
 interface SiteContent {
   id: string;
@@ -48,6 +49,16 @@ interface Project {
   is_active: boolean;
 }
 
+interface GartenProject {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string | null;
+  icon: string;
+  display_order: number;
+  is_active: boolean;
+}
+
 const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -58,6 +69,7 @@ const Admin = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [contactInfo, setContactInfo] = useState<ContactInfo[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [gartenProjects, setGartenProjects] = useState<GartenProject[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -75,17 +87,19 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    const [contentRes, servicesRes, contactRes, projectsRes] = await Promise.all([
+    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes] = await Promise.all([
       supabase.from("site_content").select("*"),
       supabase.from("services").select("*").order("display_order"),
       supabase.from("contact_info").select("*").order("display_order"),
       supabase.from("projects").select("*").order("display_order"),
+      supabase.from("garten_projects").select("*").order("display_order"),
     ]);
 
     if (contentRes.data) setContent(contentRes.data);
     if (servicesRes.data) setServices(servicesRes.data);
     if (contactRes.data) setContactInfo(contactRes.data);
     if (projectsRes.data) setProjects(projectsRes.data);
+    if (gartenRes.data) setGartenProjects(gartenRes.data);
 
     setLoading(false);
   };
@@ -227,7 +241,7 @@ const Admin = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="content" className="space-y-6">
-          <TabsList className="bg-card border border-border">
+          <TabsList className="bg-card border border-border flex-wrap">
             <TabsTrigger value="content" className="gap-2">
               <FileText className="w-4 h-4" />
               Contenu
@@ -239,6 +253,10 @@ const Admin = () => {
             <TabsTrigger value="projects" className="gap-2">
               <Image className="w-4 h-4" />
               Projekte
+            </TabsTrigger>
+            <TabsTrigger value="garten" className="gap-2">
+              <Leaf className="w-4 h-4" />
+              Garten
             </TabsTrigger>
             <TabsTrigger value="contact" className="gap-2">
               <Phone className="w-4 h-4" />
@@ -378,6 +396,17 @@ const Admin = () => {
             <AdminProjectsTab
               projects={projects}
               setProjects={setProjects}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* Garten Projects Tab */}
+          <TabsContent value="garten">
+            <AdminGartenProjectsTab
+              projects={gartenProjects}
+              setProjects={setGartenProjects}
               saving={saving}
               setSaving={setSaving}
               onRefresh={fetchData}
