@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { MapPin, Phone, Mail, Clock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,31 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: "Adresse",
-    content: "Wittkuller Str. 161, 42719 Solingen",
-  },
-  {
-    icon: Phone,
-    title: "Telefon",
-    content: "0212 22 66 39 31",
-    href: "tel:+4921222663931",
-  },
-  {
-    icon: Mail,
-    title: "E-Mail",
-    content: "info@dikerstrassenbau.de",
-    href: "mailto:info@dikerstrassenbau.de",
-  },
-  {
-    icon: Clock,
-    title: "Öffnungszeiten",
-    content: "Mo–Fr: 7:00–17:00 Uhr",
-  },
-];
+import { useContactInfo } from "@/hooks/useContactInfo";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,6 +22,38 @@ const Contact = () => {
   const { toast } = useToast();
   const formRef = useRef(null);
   const isFormInView = useInView(formRef, { once: true, margin: "-50px" });
+  
+  const { data: contactData } = useContactInfo();
+
+  // Build contact info array from dynamic data
+  const contactInfo = useMemo(() => {
+    if (!contactData) return [];
+    
+    return [
+      {
+        icon: MapPin,
+        title: "Adresse",
+        content: contactData.address,
+      },
+      {
+        icon: Phone,
+        title: "Telefon",
+        content: contactData.phone,
+        href: contactData.phoneHref,
+      },
+      {
+        icon: Mail,
+        title: "E-Mail",
+        content: contactData.email,
+        href: contactData.emailHref,
+      },
+      {
+        icon: Clock,
+        title: "Öffnungszeiten",
+        content: contactData.hours,
+      },
+    ];
+  }, [contactData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

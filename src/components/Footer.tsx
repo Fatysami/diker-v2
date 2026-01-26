@@ -1,7 +1,9 @@
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useContactInfo } from "@/hooks/useContactInfo";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { data: contactData } = useContactInfo();
 
   const quickLinks = [
     { href: "#home", label: "Home" },
@@ -15,6 +17,12 @@ const Footer = () => {
     "Straßentiefbau",
     "Kanalbau",
     "Garten- & Landschaftsbau",
+  ];
+
+  // Parse address into lines
+  const addressLines = contactData?.address?.split(",").map(s => s.trim()) || [
+    "Wittkuller Str. 161",
+    "42719 Solingen"
   ];
 
   return (
@@ -89,27 +97,31 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
                 <span className="text-secondary-foreground/70 text-sm">
-                  Wittkuller Str. 161
-                  <br />
-                  42719 Solingen
+                  {addressLines[0]}
+                  {addressLines.length > 1 && (
+                    <>
+                      <br />
+                      {addressLines.slice(1).join(", ")}
+                    </>
+                  )}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />
                 <a
-                  href="tel:+4921222663931"
+                  href={contactData?.phoneHref || "tel:+4921222663931"}
                   className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
                 >
-                  0212 22 66 39 31
+                  {contactData?.phone || "0212 22 66 39 31"}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
                 <a
-                  href="mailto:info@dikerstrassenbau.de"
+                  href={contactData?.emailHref || "mailto:info@dikerstrassenbau.de"}
                   className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
                 >
-                  info@dikerstrassenbau.de
+                  {contactData?.email || "info@dikerstrassenbau.de"}
                 </a>
               </li>
             </ul>
