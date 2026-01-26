@@ -2,49 +2,18 @@ import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings, LucideIcon, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
+import { useStrassenbauSections } from "@/hooks/useStrassenbauSections";
 
-const features = [
-  {
-    icon: Users,
-    title: "Kompetente Straßenbauer für Ihre Projekte",
-    paragraphs: [
-      "Unser Team besteht aus ausgebildeten Tiefbau-Facharbeitern und hausintern angelernten Hilfskräften. Darüber hinaus steht uns ein großer Pool an Spezialisten zur Seite, mit denen wir auch besonderen Herausforderungen begegnen können. Damit sichern wir uns für Ihre Projekte rund um Straßenbau und Tiefbau stets die größte Kompetenz.",
-      "Durch eine faire Behandlung, familiären Umgang und übertarifliche Bezahlung halten wir unser hoch kompetentes Team in unserem Straßenbauunternehmen. Das macht uns nicht nur jederzeit einsatzbereit. Vor allem erreichen wir damit, dass jeder aus unserem Team einen immer größeren Schatz an Erfahrungen ansammeln kann.",
-      "Wir verfolgen bei unseren Mitarbeitern ein klares Ziel: Jeder sollte alles können. Das macht uns für Ihre Projekte besonders flexibel. Gleichgültig, wer zur Bewältigung Ihrer Herausforderungen antritt, Sie erhalten eine Ausführung in zuverlässiger und gleichbleibender Qualität."
-    ]
-  },
-  {
-    icon: Wrench,
-    title: "Moderne Maschinen und Fahrzeuge für Ihren Vorteil",
-    paragraphs: [
-      "Bei uns bleibt eine Maschine nur so lange im Einsatz, bis es eine bessere gibt. Wir fahren nicht jedes einzelne Gerät auf Verschleiß, sondern nutzen stets die Möglichkeiten neuester Technologie voll aus. Damit sind wir eine der schnellsten Unternehmen für Straßenbau und Tiefbau der Umgebung.",
-      "Hocheffiziente Werkzeuge, leistungsstarke Fahrzeuge und innovative Hilfsmittel machen jedes Bauprojekt in kürzester Zeit umsetzbar. Neben einer maximalen Effizienz achten wir bei unserem Equipment auch auf den Umweltschutz.",
-      "Die von uns verwendeten im Straßenbau Fahrzeuge und Maschinen erfüllen alle Anforderungen an den Emissionsschutz. Superleise Kompressoren und Stromaggregate sind für uns ebenso selbstverständlich, wie Baufahrzeuge mit den neuesten Abgas-Reinigungssystemen."
-    ]
-  },
-  {
-    icon: MessageSquare,
-    title: "Umfassende Beratung für Straßenbau und Tiefbau",
-    paragraphs: [
-      "Kommen Sie zu uns, wenn Sie sich einer Herausforderung im Straßenbau stellen müssen. Unser Straßenbauunternehmen kann Ihnen nicht nur bei der Ausführung bestmöglich helfen. Wir bieten Ihnen darüber hinaus auch unsere umfassende Kompetenz bei Beratung und Begutachtung Ihrer Projekte an.",
-      "Mit Hilfe von zertifizierten Bausachverständigen, Architekten, Ingenieuren oder Spezialisten können wir Ihnen eine umfassende Beratung bei Neubau oder Sanierung anbieten. Wir entwickeln auf Grundlage der festgestellten Notwendigkeiten die bestmögliche Lösung für Ihr Projekt.",
-      "Sie erhalten damit eine hohe Sicherheit, was die termingerechte Ausführung und das Einhalten Ihres Budgets angeht. Wir haben alles, um Ihr Projekt fristgerecht und unter Einhaltung des Kostenrahmens fertig zu stellen."
-    ]
-  },
-  {
-    icon: Settings,
-    title: "Für kleine wie große Projekte bereit",
-    paragraphs: [
-      "Rufen Sie uns an, gleichgültig, wie klein, groß, eilig oder langfristig Ihr Bauvorhaben sein soll. Wir kommen zur Ausbesserung von Schlaglöchern ebenso gerne, wie zur Sanierung ganzer Straßen.",
-      "Die fristgerechte, schnelle und professionelle Ausführung aller Aufträge ist Teil unserer Firmenphilosophie, denn wir wissen: 'Wer nicht in kleinen Dingen zuverlässig ist, der ist es auch nicht in großen'.",
-      "Wenn wir kommen, dann ist die professionelle, sachgerechte und effiziente Ausführung Ihres Bauvorhabens garantiert. Zuverlässigkeit für Ihre Planungssicherheit gehört bei uns zur Firmenphilosophie."
-    ]
-  }
-];
+const iconMap: Record<string, LucideIcon> = {
+  Users,
+  Wrench,
+  MessageSquare,
+  Settings,
+};
 
 const services = [
   "Parkplätze",
@@ -56,6 +25,8 @@ const services = [
 ];
 
 const Strassenbau = () => {
+  const { sections, loading } = useStrassenbauSections();
+
   useSEOHead({
     title: "Straßenbau Solingen | Asphaltierung & Pflasterarbeiten",
     description: "Professioneller Straßenbau in Solingen ✓ Parkplätze ✓ Fahrradwege ✓ Asphaltierung ✓ Pflasterarbeiten. Kompetentes Team & moderne Ausstattung. Jetzt anfragen!",
@@ -132,17 +103,30 @@ const Strassenbau = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-8">
-            {features.map((feature, index) => (
-              <ServiceFeatureCard
-                key={feature.title}
-                title={feature.title}
-                paragraphs={feature.paragraphs}
-                icon={feature.icon}
-                index={index}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-8">
+              {sections.map((section, index) => {
+                const IconComponent = iconMap[section.icon] || Wrench;
+                return (
+                  <ServiceFeatureCard
+                    key={section.id}
+                    title={section.title}
+                    paragraphs={section.paragraphs}
+                    icon={IconComponent}
+                    imageUrl={section.image_url}
+                    imageUrl2={section.image_url_2}
+                    imageUrl3={section.image_url_3}
+                    imageUrl4={section.image_url_4}
+                    index={index}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

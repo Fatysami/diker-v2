@@ -8,12 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette 
+  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction 
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
 import AdminGartenProjectsTab from "@/components/admin/AdminGartenProjectsTab";
 import AdminKanalbauTab from "@/components/admin/AdminKanalbauTab";
+import AdminTiefbauTab from "@/components/admin/AdminTiefbauTab";
+import AdminStrassenbauTab from "@/components/admin/AdminStrassenbauTab";
 
 interface SiteContent {
   id: string;
@@ -76,6 +78,32 @@ interface KanalbauSection {
   is_active: boolean;
 }
 
+interface TiefbauSection {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  icon: string;
+  image_url: string | null;
+  image_url_2: string | null;
+  image_url_3: string | null;
+  image_url_4: string | null;
+  display_order: number;
+  is_active: boolean;
+}
+
+interface StrassenbauSection {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  icon: string;
+  image_url: string | null;
+  image_url_2: string | null;
+  image_url_3: string | null;
+  image_url_4: string | null;
+  display_order: number;
+  is_active: boolean;
+}
+
 const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -88,6 +116,8 @@ const Admin = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [gartenProjects, setGartenProjects] = useState<GartenProject[]>([]);
   const [kanalbauSections, setKanalbauSections] = useState<KanalbauSection[]>([]);
+  const [tiefbauSections, setTiefbauSections] = useState<TiefbauSection[]>([]);
+  const [strassenbauSections, setStrassenbauSections] = useState<StrassenbauSection[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -105,13 +135,15 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes, kanalbauRes] = await Promise.all([
+    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes, kanalbauRes, tiefbauRes, strassenbauRes] = await Promise.all([
       supabase.from("site_content").select("*"),
       supabase.from("services").select("*").order("display_order"),
       supabase.from("contact_info").select("*").order("display_order"),
       supabase.from("projects").select("*").order("display_order"),
       supabase.from("garten_projects").select("*").order("display_order"),
       supabase.from("kanalbau_sections").select("*").order("display_order"),
+      supabase.from("tiefbau_sections").select("*").order("display_order"),
+      supabase.from("strassenbau_sections").select("*").order("display_order"),
     ]);
 
     if (contentRes.data) setContent(contentRes.data);
@@ -120,6 +152,8 @@ const Admin = () => {
     if (projectsRes.data) setProjects(projectsRes.data);
     if (gartenRes.data) setGartenProjects(gartenRes.data);
     if (kanalbauRes.data) setKanalbauSections(kanalbauRes.data);
+    if (tiefbauRes.data) setTiefbauSections(tiefbauRes.data);
+    if (strassenbauRes.data) setStrassenbauSections(strassenbauRes.data);
 
     setLoading(false);
   };
@@ -282,6 +316,14 @@ const Admin = () => {
               <Pipette className="w-4 h-4" />
               Kanalbau
             </TabsTrigger>
+            <TabsTrigger value="tiefbau" className="gap-2">
+              <HardHat className="w-4 h-4" />
+              Tiefbau
+            </TabsTrigger>
+            <TabsTrigger value="strassenbau" className="gap-2">
+              <Construction className="w-4 h-4" />
+              Straßenbau
+            </TabsTrigger>
             <TabsTrigger value="contact" className="gap-2">
               <Phone className="w-4 h-4" />
               Contact
@@ -442,6 +484,28 @@ const Admin = () => {
             <AdminKanalbauTab
               sections={kanalbauSections}
               setSections={setKanalbauSections}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* Tiefbau Tab */}
+          <TabsContent value="tiefbau">
+            <AdminTiefbauTab
+              sections={tiefbauSections}
+              setSections={setTiefbauSections}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* Strassenbau Tab */}
+          <TabsContent value="strassenbau">
+            <AdminStrassenbauTab
+              sections={strassenbauSections}
+              setSections={setStrassenbauSections}
               saving={saving}
               setSaving={setSaving}
               onRefresh={fetchData}

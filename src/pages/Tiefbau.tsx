@@ -2,49 +2,18 @@ import { useSEOHead } from "@/hooks/useSEOHead";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings, LucideIcon, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
 import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
+import { useTiefbauSections } from "@/hooks/useTiefbauSections";
 
-const features = [
-  {
-    icon: Users,
-    title: "Unser kompetentes Team steht für Sie bereit",
-    paragraphs: [
-      "Wir beschäftigen in unserer Tiefbaufirma ausschließlich ausgebildete Tiefbauer und hausintern angelernte Hilfskräfte. Wir schulen unsere Mitarbeiter auf eine umfassende Kompetenz – kurz gesagt: Bei uns muss jeder alles können.",
-      "Um das zu gewährleisten, halten wir unsere Mitarbeiter durch Motivation in unserem Unternehmen. So sammelt sich in unserem Team immer mehr Erfahrung an – eine Erfahrung die Sie nutzen können.",
-      "Gleichgültig, wie komplex die Herausforderung auch ist, wir haben schon alles gesehen und bekommen alles in den Griff. Damit unser Team auch so gut wie möglich arbeiten kann, haben wir einen umfassenden Fuhr- und Maschinenpark in unserem Tiefbauunternehmen in Solingen bereitstehen."
-    ]
-  },
-  {
-    icon: Wrench,
-    title: "Maximale Effizienz durch modernes Equipment",
-    paragraphs: [
-      "Um unsere Mitarbeiter bestmöglich zum Erreichen Ihrer Ziele zu unterstützen, halten wir unseren Fuhr- und Maschinenpark immer auf dem neuesten Stand.",
-      "Moderne Werkzeuge, leistungsstarke Maschinen und innovative, effiziente Verfahren erledigen Ihre Bauvorhaben in einer gleich bleibend hohen Qualität.",
-      "Darüber hinaus genügen unsere Baufahrzeuge auch immer den neuesten Abgasvorschriften. Verzögerungen wegen Rechtsverstößen finden mit uns als Tiefbauunternehmen nicht statt."
-    ]
-  },
-  {
-    icon: MessageSquare,
-    title: "Umfassende Beratung vor Baubeginn",
-    paragraphs: [
-      "Rufen Sie uns an, gleichgültig um welches Tiefbau-Projekt es sich bei Ihnen handelt. Wir begutachten Ihre Baustelle professionell und erarbeiten gemeinsam mit Ihnen einen Maßnahmenplan.",
-      "Profitieren Sie von unserer hohen Erfahrung und lassen Sie sich bei Ihrer Bauplanung und Bauausführung umfassend durch uns beraten. Wir kennen nicht nur die modernsten Verfahren, Werkstoffe und Maschinen.",
-      "Auch sind wir stets auf dem neuesten Stand, was den Rechtsrahmen angeht. Vermeiden Sie teure Folgekosten, indem sie mit uns Ihre Baustelle vom ersten Tag an richtig bearbeiten."
-    ]
-  },
-  {
-    icon: Settings,
-    title: "Reparatur von Bauschäden",
-    paragraphs: [
-      "Wir sind auch Ihr Tiefbauunternehmen in Solingen wenn es um die Reparatur von Bauschäden geht. Ob Beseitigung von kleinen Frostschäden oder Instandsetzung massiver Schäden: Wir stehen bereit.",
-      "Vertrauen Sie unserer Kompetenz und lassen Sie sich bei der Wahl der Reparaturverfahren durch uns beraten. Der Baubereich ist sehr dynamisch und bringt ständig innovative Produkte hervor.",
-      "Wir halten unsere Tiefbaufirma stets auf dem neuesten Stand und können Sie mit dem aktuellsten Wissen unterstützen."
-    ]
-  }
-];
+const iconMap: Record<string, LucideIcon> = {
+  Users,
+  Wrench,
+  MessageSquare,
+  Settings,
+};
 
 const services = [
   "Erdarbeiten",
@@ -56,6 +25,8 @@ const services = [
 ];
 
 const Tiefbau = () => {
+  const { sections, loading } = useTiefbauSections();
+
   useSEOHead({
     title: "Tiefbau Solingen | Erdarbeiten & Fundamente",
     description: "Professioneller Tiefbau in Solingen ✓ Erdarbeiten ✓ Fundamente ✓ Baugründung ✓ Kanalbau. Erfahrenes Team & modernste Technik. Jetzt Angebot anfordern!",
@@ -131,17 +102,30 @@ const Tiefbau = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-8">
-            {features.map((feature, index) => (
-              <ServiceFeatureCard
-                key={feature.title}
-                title={feature.title}
-                paragraphs={feature.paragraphs}
-                icon={feature.icon}
-                index={index}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-8">
+              {sections.map((section, index) => {
+                const IconComponent = iconMap[section.icon] || Wrench;
+                return (
+                  <ServiceFeatureCard
+                    key={section.id}
+                    title={section.title}
+                    paragraphs={section.paragraphs}
+                    icon={IconComponent}
+                    imageUrl={section.image_url}
+                    imageUrl2={section.image_url_2}
+                    imageUrl3={section.image_url_3}
+                    imageUrl4={section.image_url_4}
+                    index={index}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
