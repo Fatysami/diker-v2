@@ -120,7 +120,7 @@ const GartenLandschaftsbau = () => {
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="flex flex-col gap-8">
               {projects?.map((project, index) => (
                 <GartenProjectCard
                   key={project.id}
