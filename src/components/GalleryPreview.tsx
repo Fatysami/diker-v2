@@ -1,11 +1,17 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import GalleryGrid from "./gallery/GalleryGrid";
 import { galleryImages } from "./gallery/GalleryData";
+import { useProjects } from "@/hooks/useProjects";
 
 const GalleryPreview = () => {
+  const { projects, loading, toGalleryImages } = useProjects(6);
+  
+  // Use dynamic projects if available, fallback to static images
+  const displayImages = projects.length > 0 ? toGalleryImages() : galleryImages.slice(0, 6);
+
   return (
     <section id="projekte" className="section-padding bg-muted/30">
       <div className="container-custom">
@@ -30,14 +36,20 @@ const GalleryPreview = () => {
         </motion.div>
 
         {/* Gallery Grid - Show only 6 items, no filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <GalleryGrid images={galleryImages} showFilters={false} maxItems={6} />
-        </motion.div>
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <GalleryGrid images={displayImages} showFilters={false} maxItems={6} />
+          </motion.div>
+        )}
 
         {/* CTA Button */}
         <motion.div 
