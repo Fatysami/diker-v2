@@ -1,50 +1,26 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { useServices } from "@/hooks/useServices";
+
+// Fallback images for services without uploaded images
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
 import kanalbauImg from "@/assets/service-kanalbau.jpg";
 import gartenImg from "@/assets/service-garten.jpg";
 
-const services = [
-  {
-    title: "Straßenbau",
-    description:
-      "Parkplätze, Straßen und Fahrradwege – professionell geplant und termingerecht umgesetzt.",
-    image: strassenbauImg,
-    features: ["Asphaltierung", "Pflasterarbeiten", "Fahrradwege"],
-    link: "/strassenbau",
-  },
-  {
-    title: "Straßentiefbau",
-    description:
-      "Fundamente und Erdarbeiten bilden die Basis für jedes erfolgreiche Bauprojekt.",
-    image: tiefbauImg,
-    features: ["Erdarbeiten", "Fundamente", "Baugründung"],
-    link: "/tiefbau",
-  },
-  {
-    title: "Kanalbau",
-    description:
-      "Spezialisierte Infrastrukturarbeiten für Entwässerung und unterirdische Systeme.",
-    image: kanalbauImg,
-    features: ["Entwässerung", "Rohrleitungen", "Schachtbau"],
-    link: "/kanalbau",
-  },
-  {
-    title: "Garten- & Landschaftsbau",
-    description:
-      "Gestaltung von Außenanlagen mit Naturstein, Bepflanzung und modernem Design.",
-    image: gartenImg,
-    features: ["Naturstein", "Bepflanzung", "Terrassen"],
-    link: "/garten-landschaftsbau",
-  },
-];
+const fallbackImages: Record<string, string> = {
+  "Straßenbau": strassenbauImg,
+  "Straßentiefbau": tiefbauImg,
+  "Kanalbau": kanalbauImg,
+  "Garten- & Landschaftsbau": gartenImg,
+};
 
 const Services = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { services, loading, error } = useServices();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,6 +42,20 @@ const Services = () => {
       },
     },
   };
+
+  if (loading) {
+    return (
+      <section id="leistungen" className="section-padding bg-background">
+        <div className="container-custom flex justify-center py-20">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    console.error("Error loading services:", error);
+  }
 
   return (
     <section id="leistungen" className="section-padding bg-background">
@@ -99,12 +89,14 @@ const Services = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
         >
           {services.map((service) => {
+            const imageUrl = service.image_url || fallbackImages[service.title] || strassenbauImg;
+            
             const content = (
               <>
                 {/* Image */}
                 <div className="relative h-64 overflow-hidden">
                   <img
-                    src={service.image}
+                    src={imageUrl}
                     alt={service.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -128,7 +120,7 @@ const Services = () => {
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature) => (
+                    {(service.features || []).map((feature) => (
                       <span
                         key={feature}
                         className="inline-block bg-muted text-muted-foreground text-sm px-3 py-1 rounded-full transition-colors duration-300 group-hover:bg-primary/10 group-hover:text-primary"
@@ -142,7 +134,7 @@ const Services = () => {
             );
 
             return (
-              <motion.div key={service.title} variants={itemVariants}>
+              <motion.div key={service.id} variants={itemVariants}>
                 {service.link ? (
                   <Link
                     to={service.link}

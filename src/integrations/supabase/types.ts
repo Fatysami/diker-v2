@@ -199,10 +199,12 @@ export type Database = {
           created_at: string
           description: string
           display_order: number
+          features: string[] | null
           icon: string
           id: string
           image_url: string | null
           is_active: boolean
+          link: string | null
           title: string
           updated_at: string
         }
@@ -210,10 +212,12 @@ export type Database = {
           created_at?: string
           description: string
           display_order?: number
+          features?: string[] | null
           icon?: string
           id?: string
           image_url?: string | null
           is_active?: boolean
+          link?: string | null
           title: string
           updated_at?: string
         }
@@ -221,10 +225,12 @@ export type Database = {
           created_at?: string
           description?: string
           display_order?: number
+          features?: string[] | null
           icon?: string
           id?: string
           image_url?: string | null
           is_active?: boolean
+          link?: string | null
           title?: string
           updated_at?: string
         }
