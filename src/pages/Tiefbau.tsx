@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Users, Wrench, MessageSquare, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
+import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
 
 const features = [
   {
@@ -132,25 +133,13 @@ const Tiefbau = () => {
 
           <div className="flex flex-col gap-8">
             {features.map((feature, index) => (
-              <div 
+              <ServiceFeatureCard
                 key={feature.title}
-                className="bg-card rounded-2xl p-8 border border-border card-hover"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                  <feature.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold text-card-foreground mb-4">
-                  {feature.title}
-                </h3>
-                <div className="space-y-3">
-                  {feature.paragraphs.map((paragraph, pIndex) => (
-                    <p key={pIndex} className="text-muted-foreground leading-relaxed text-sm">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </div>
+                title={feature.title}
+                paragraphs={feature.paragraphs}
+                icon={feature.icon}
+                index={index}
+              />
             ))}
           </div>
         </div>
