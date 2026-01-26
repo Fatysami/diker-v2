@@ -18,6 +18,9 @@ interface GartenProject {
   title: string;
   description: string;
   image_url: string | null;
+  image_url_2: string | null;
+  image_url_3: string | null;
+  image_url_4: string | null;
   icon: string;
   display_order: number;
   is_active: boolean;
@@ -42,6 +45,8 @@ const iconOptions = [
   { value: "Fence", label: "Zaun" },
 ];
 
+type ImageField = 'image_url' | 'image_url_2' | 'image_url_3' | 'image_url_4';
+
 const AdminGartenProjectsTab = ({ 
   projects, 
   setProjects, 
@@ -54,7 +59,6 @@ const AdminGartenProjectsTab = ({
     title: "",
     description: "",
     icon: "Warehouse",
-    image: null as File | null,
   });
   const [addingNew, setAddingNew] = useState(false);
 
@@ -85,22 +89,22 @@ const AdminGartenProjectsTab = ({
     return publicUrl;
   };
 
-  const handleImageUpload = async (projectId: string, file: File) => {
-    setUploading(projectId);
+  const handleImageUpload = async (projectId: string, file: File, imageField: ImageField) => {
+    setUploading(`${projectId}-${imageField}`);
     
     const publicUrl = await uploadImage(file, projectId);
     
     if (publicUrl) {
       const { error } = await supabase
         .from('garten_projects')
-        .update({ image_url: publicUrl })
+        .update({ [imageField]: publicUrl })
         .eq('id', projectId);
 
       if (error) {
         toast.error("Fehler beim Aktualisieren");
       } else {
         setProjects(prev =>
-          prev.map(item => item.id === projectId ? { ...item, image_url: publicUrl } : item)
+          prev.map(item => item.id === projectId ? { ...item, [imageField]: publicUrl } : item)
         );
         toast.success("Bild aktualisiert!");
       }
@@ -143,23 +147,12 @@ const AdminGartenProjectsTab = ({
 
     setAddingNew(true);
 
-    let publicUrl: string | null = null;
-    
-    if (newProject.image) {
-      publicUrl = await uploadImage(newProject.image);
-      if (!publicUrl && newProject.image) {
-        setAddingNew(false);
-        return;
-      }
-    }
-
     const { data, error } = await supabase
       .from('garten_projects')
       .insert({
         title: newProject.title,
         description: newProject.description,
         icon: newProject.icon,
-        image_url: publicUrl,
         display_order: projects.length + 1,
         is_active: true,
       })
@@ -170,7 +163,7 @@ const AdminGartenProjectsTab = ({
       toast.error("Fehler beim Erstellen");
     } else if (data) {
       setProjects(prev => [...prev, data]);
-      setNewProject({ title: "", description: "", icon: "Warehouse", image: null });
+      setNewProject({ title: "", description: "", icon: "Warehouse" });
       toast.success("Projekt hinzugefügt!");
     }
 
@@ -192,6 +185,58 @@ const AdminGartenProjectsTab = ({
       toast.success("Projekt gelöscht!");
     }
   };
+
+  const ImageUploadSlot = ({ 
+    projectId, 
+    imageUrl, 
+    imageField, 
+    label,
+    isLarge = false 
+  }: { 
+    projectId: string; 
+    imageUrl: string | null; 
+    imageField: ImageField;
+    label: string;
+    isLarge?: boolean;
+  }) => (
+    <div className={`relative ${isLarge ? 'aspect-[4/3]' : 'aspect-square'}`}>
+      <div className="w-full h-full rounded-lg overflow-hidden bg-muted">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={label}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <ImageIcon className={`${isLarge ? 'w-12 h-12' : 'w-6 h-6'} text-muted-foreground/30`} />
+          </div>
+        )}
+      </div>
+      <label className="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/0 hover:bg-black/40 transition-colors group">
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImageUpload(projectId, file, imageField);
+          }}
+        />
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2">
+          {uploading === `${projectId}-${imageField}` ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Upload className="w-4 h-4" />
+          )}
+          {imageUrl ? "Ändern" : "Hochladen"}
+        </div>
+      </label>
+      <span className="absolute bottom-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+        {label}
+      </span>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -253,27 +298,6 @@ const AdminGartenProjectsTab = ({
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
-              Bild (optional)
-            </label>
-            <div className="flex items-center gap-4">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setNewProject(prev => ({ 
-                  ...prev, 
-                  image: e.target.files?.[0] || null 
-                }))}
-                className="flex-1"
-              />
-              {newProject.image && (
-                <span className="text-sm text-muted-foreground">
-                  {newProject.image.name}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="md:col-span-2">
             <Button onClick={addProject} disabled={addingNew || !newProject.title}>
               {addingNew ? (
                 <>
@@ -283,7 +307,7 @@ const AdminGartenProjectsTab = ({
               ) : (
                 <>
                   <Plus className="w-4 h-4 mr-2" />
-                  Projekt hinzufügen
+                  Projekt hinzufügen (Bilder danach)
                 </>
               )}
             </Button>
@@ -301,45 +325,49 @@ const AdminGartenProjectsTab = ({
         ) : (
           projects.map((project) => (
             <div key={project.id} className="bg-card rounded-xl p-6 border border-border">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Image preview */}
-                <div className="relative">
-                  <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                    {project.image_url ? (
-                      <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <ImageIcon className="w-12 h-12 text-muted-foreground/50" />
-                      </div>
-                    )}
-                  </div>
-                  <label className="absolute bottom-2 right-2 cursor-pointer">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleImageUpload(project.id, file);
-                      }}
-                    />
-                    <div className="bg-primary text-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity">
-                      {uploading === project.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Upload className="w-4 h-4" />
-                      )}
-                      {project.image_url ? "Ändern" : "Hochladen"}
-                    </div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                {/* Images Grid - 4 slots */}
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-3">
+                    Bilder (1 groß + 3 klein)
                   </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {/* Main large image */}
+                    <div className="col-span-2 row-span-3">
+                      <ImageUploadSlot 
+                        projectId={project.id}
+                        imageUrl={project.image_url}
+                        imageField="image_url"
+                        label="Hauptbild"
+                        isLarge
+                      />
+                    </div>
+                    {/* Small image 1 */}
+                    <ImageUploadSlot 
+                      projectId={project.id}
+                      imageUrl={project.image_url_2}
+                      imageField="image_url_2"
+                      label="Bild 2"
+                    />
+                    {/* Small image 2 */}
+                    <ImageUploadSlot 
+                      projectId={project.id}
+                      imageUrl={project.image_url_3}
+                      imageField="image_url_3"
+                      label="Bild 3"
+                    />
+                    {/* Small image 3 */}
+                    <ImageUploadSlot 
+                      projectId={project.id}
+                      imageUrl={project.image_url_4}
+                      imageField="image_url_4"
+                      label="Bild 4"
+                    />
+                  </div>
                 </div>
 
                 {/* Form fields */}
-                <div className="lg:col-span-2 space-y-4">
+                <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-muted-foreground mb-2">
@@ -377,11 +405,11 @@ const AdminGartenProjectsTab = ({
                     <Textarea
                       value={project.description}
                       onChange={(e) => handleProjectChange(project.id, "description", e.target.value)}
-                      rows={3}
+                      rows={4}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2">
                         <input
@@ -392,7 +420,7 @@ const AdminGartenProjectsTab = ({
                           className="w-4 h-4"
                         />
                         <label htmlFor={`active-garten-${project.id}`} className="text-sm text-muted-foreground">
-                          Aktiv (auf der Website sichtbar)
+                          Aktiv
                         </label>
                       </div>
                       <div className="flex items-center gap-2">

@@ -76,6 +76,9 @@ export type Database = {
           icon: string
           id: string
           image_url: string | null
+          image_url_2: string | null
+          image_url_3: string | null
+          image_url_4: string | null
           is_active: boolean
           title: string
           updated_at: string
@@ -87,6 +90,9 @@ export type Database = {
           icon?: string
           id?: string
           image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
           is_active?: boolean
           title: string
           updated_at?: string
@@ -98,6 +104,9 @@ export type Database = {
           icon?: string
           id?: string
           image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
           is_active?: boolean
           title?: string
           updated_at?: string
