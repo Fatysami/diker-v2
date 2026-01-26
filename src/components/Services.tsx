@@ -19,8 +19,11 @@ const fallbackImages: Record<string, string> = {
 
 const Services = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const { services, loading, error } = useServices();
+
+  // Debug log
+  console.log("Services loaded:", services.length, "isInView:", isInView);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -85,7 +88,7 @@ const Services = () => {
           ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
         >
           {services.map((service) => {
