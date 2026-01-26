@@ -16,6 +16,7 @@ import AdminGartenProjectsTab from "@/components/admin/AdminGartenProjectsTab";
 import AdminKanalbauTab from "@/components/admin/AdminKanalbauTab";
 import AdminTiefbauTab from "@/components/admin/AdminTiefbauTab";
 import AdminStrassenbauTab from "@/components/admin/AdminStrassenbauTab";
+import AdminServicesTab from "@/components/admin/AdminServicesTab";
 
 interface SiteContent {
   id: string;
@@ -30,6 +31,8 @@ interface Service {
   description: string;
   icon: string;
   image_url: string | null;
+  features: string[];
+  link: string | null;
   display_order: number;
   is_active: boolean;
 }
@@ -184,36 +187,7 @@ const Admin = () => {
     setSaving(false);
   };
 
-  const handleServiceChange = (id: string, field: keyof Service, value: string | boolean) => {
-    setServices(prev =>
-      prev.map(item => item.id === id ? { ...item, [field]: value } : item)
-    );
-  };
-
-  const saveServices = async () => {
-    setSaving(true);
-    
-    for (const service of services) {
-      const { error } = await supabase
-        .from("services")
-        .update({
-          title: service.title,
-          description: service.description,
-          icon: service.icon,
-          is_active: service.is_active,
-        })
-        .eq("id", service.id);
-      
-      if (error) {
-        toast.error("Erreur lors de la sauvegarde");
-        setSaving(false);
-        return;
-      }
-    }
-
-    toast.success("Services sauvegardés!");
-    setSaving(false);
-  };
+  // Service handling is now done by AdminServicesTab
 
   const handleContactChange = (id: string, field: keyof ContactInfo, value: string) => {
     setContactInfo(prev =>
@@ -371,63 +345,14 @@ const Admin = () => {
           </TabsContent>
 
           {/* Services Tab */}
-          <TabsContent value="services" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">Services</h2>
-              <Button onClick={saveServices} disabled={saving}>
-                <Save className="w-4 h-4 mr-2" />
-                {saving ? "Sauvegarde..." : "Sauvegarder"}
-              </Button>
-            </div>
-
-            <div className="grid gap-6">
-              {services.map((service) => (
-                <div key={service.id} className="bg-card rounded-xl p-6 border border-border">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-muted-foreground mb-2">
-                        Titre
-                      </label>
-                      <Input
-                        value={service.title}
-                        onChange={(e) => handleServiceChange(service.id, "title", e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-muted-foreground mb-2">
-                        Icône (Lucide)
-                      </label>
-                      <Input
-                        value={service.icon}
-                        onChange={(e) => handleServiceChange(service.id, "icon", e.target.value)}
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-muted-foreground mb-2">
-                        Description
-                      </label>
-                      <Textarea
-                        value={service.description}
-                        onChange={(e) => handleServiceChange(service.id, "description", e.target.value)}
-                        rows={2}
-                      />
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id={`active-${service.id}`}
-                        checked={service.is_active}
-                        onChange={(e) => handleServiceChange(service.id, "is_active", e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      <label htmlFor={`active-${service.id}`} className="text-sm text-muted-foreground">
-                        Actif (visible sur le site)
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <TabsContent value="services">
+            <AdminServicesTab
+              services={services}
+              setServices={setServices}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
           </TabsContent>
 
           {/* Contact Tab */}
