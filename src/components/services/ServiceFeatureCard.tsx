@@ -4,13 +4,16 @@ interface ServiceFeatureCardProps {
   title: string;
   paragraphs: string[];
   icon: LucideIcon;
-  imageUrl?: string;
+  imageUrl?: string | null;
+  imageUrl2?: string | null;
+  imageUrl3?: string | null;
+  imageUrl4?: string | null;
   index: number;
 }
 
-const ImagePlaceholder = ({ icon: Icon }: { icon: LucideIcon }) => (
+const ImagePlaceholder = ({ icon: Icon, size = "large" }: { icon: LucideIcon; size?: "large" | "small" }) => (
   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
-    <Icon className="w-16 h-16 text-primary/20" />
+    <Icon className={size === "large" ? "w-16 h-16 text-primary/20" : "w-8 h-8 text-muted-foreground/30"} />
   </div>
 );
 
@@ -19,22 +22,68 @@ const ServiceFeatureCard = ({
   paragraphs, 
   icon: IconComponent, 
   imageUrl,
+  imageUrl2,
+  imageUrl3,
+  imageUrl4,
   index 
 }: ServiceFeatureCardProps) => {
   const isEven = index % 2 === 0;
 
-  const ImageSection = () => (
-    <div className="h-full w-full relative overflow-hidden bg-muted">
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-      ) : (
-        <ImagePlaceholder icon={IconComponent} />
-      )}
+  const ImagesSection = () => (
+    <div className="flex h-full">
+      {/* Large main image */}
+      <div className="w-2/3 relative overflow-hidden bg-muted">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={`${title} - Hauptbild`}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <ImagePlaceholder icon={IconComponent} size="large" />
+        )}
+      </div>
+
+      {/* 3 small images stacked vertically */}
+      <div className="w-1/3 flex flex-col">
+        <div className="flex-1 relative overflow-hidden bg-muted border-l border-b border-border/30">
+          {imageUrl2 ? (
+            <img
+              src={imageUrl2}
+              alt={`${title} - Bild 2`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <ImagePlaceholder icon={ImageIcon} size="small" />
+          )}
+        </div>
+        <div className="flex-1 relative overflow-hidden bg-muted border-l border-b border-border/30">
+          {imageUrl3 ? (
+            <img
+              src={imageUrl3}
+              alt={`${title} - Bild 3`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <ImagePlaceholder icon={ImageIcon} size="small" />
+          )}
+        </div>
+        <div className="flex-1 relative overflow-hidden bg-muted border-l border-border/30">
+          {imageUrl4 ? (
+            <img
+              src={imageUrl4}
+              alt={`${title} - Bild 4`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <ImagePlaceholder icon={ImageIcon} size="small" />
+          )}
+        </div>
+      </div>
     </div>
   );
 
@@ -69,7 +118,7 @@ const ServiceFeatureCard = ({
         {isEven ? (
           <>
             <div className="order-1 lg:order-1 h-64 lg:h-auto">
-              <ImageSection />
+              <ImagesSection />
             </div>
             <div className="order-2 lg:order-2">
               <ContentSection />
@@ -78,7 +127,7 @@ const ServiceFeatureCard = ({
         ) : (
           <>
             <div className="order-1 lg:order-2 h-64 lg:h-auto">
-              <ImageSection />
+              <ImagesSection />
             </div>
             <div className="order-2 lg:order-1">
               <ContentSection />

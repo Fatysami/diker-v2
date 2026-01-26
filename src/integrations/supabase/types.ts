@@ -113,6 +113,51 @@ export type Database = {
         }
         Relationships: []
       }
+      kanalbau_sections: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon: string
+          id: string
+          image_url: string | null
+          image_url_2: string | null
+          image_url_3: string | null
+          image_url_4: string | null
+          is_active: boolean
+          paragraphs: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
+          is_active?: boolean
+          paragraphs?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          image_url?: string | null
+          image_url_2?: string | null
+          image_url_3?: string | null
+          image_url_4?: string | null
+          is_active?: boolean
+          paragraphs?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           category: string | null

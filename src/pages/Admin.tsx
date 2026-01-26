@@ -8,11 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2, Leaf 
+  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette 
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
 import AdminGartenProjectsTab from "@/components/admin/AdminGartenProjectsTab";
+import AdminKanalbauTab from "@/components/admin/AdminKanalbauTab";
 
 interface SiteContent {
   id: string;
@@ -62,6 +63,19 @@ interface GartenProject {
   is_active: boolean;
 }
 
+interface KanalbauSection {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  icon: string;
+  image_url: string | null;
+  image_url_2: string | null;
+  image_url_3: string | null;
+  image_url_4: string | null;
+  display_order: number;
+  is_active: boolean;
+}
+
 const Admin = () => {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -73,6 +87,7 @@ const Admin = () => {
   const [contactInfo, setContactInfo] = useState<ContactInfo[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [gartenProjects, setGartenProjects] = useState<GartenProject[]>([]);
+  const [kanalbauSections, setKanalbauSections] = useState<KanalbauSection[]>([]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -90,12 +105,13 @@ const Admin = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes] = await Promise.all([
+    const [contentRes, servicesRes, contactRes, projectsRes, gartenRes, kanalbauRes] = await Promise.all([
       supabase.from("site_content").select("*"),
       supabase.from("services").select("*").order("display_order"),
       supabase.from("contact_info").select("*").order("display_order"),
       supabase.from("projects").select("*").order("display_order"),
       supabase.from("garten_projects").select("*").order("display_order"),
+      supabase.from("kanalbau_sections").select("*").order("display_order"),
     ]);
 
     if (contentRes.data) setContent(contentRes.data);
@@ -103,6 +119,7 @@ const Admin = () => {
     if (contactRes.data) setContactInfo(contactRes.data);
     if (projectsRes.data) setProjects(projectsRes.data);
     if (gartenRes.data) setGartenProjects(gartenRes.data);
+    if (kanalbauRes.data) setKanalbauSections(kanalbauRes.data);
 
     setLoading(false);
   };
@@ -261,6 +278,10 @@ const Admin = () => {
               <Leaf className="w-4 h-4" />
               Garten
             </TabsTrigger>
+            <TabsTrigger value="kanalbau" className="gap-2">
+              <Pipette className="w-4 h-4" />
+              Kanalbau
+            </TabsTrigger>
             <TabsTrigger value="contact" className="gap-2">
               <Phone className="w-4 h-4" />
               Contact
@@ -410,6 +431,17 @@ const Admin = () => {
             <AdminGartenProjectsTab
               projects={gartenProjects}
               setProjects={setGartenProjects}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
+          </TabsContent>
+
+          {/* Kanalbau Tab */}
+          <TabsContent value="kanalbau">
+            <AdminKanalbauTab
+              sections={kanalbauSections}
+              setSections={setKanalbauSections}
               saving={saving}
               setSaving={setSaving}
               onRefresh={fetchData}
