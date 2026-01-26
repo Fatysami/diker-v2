@@ -17,6 +17,7 @@ import AdminKanalbauTab from "@/components/admin/AdminKanalbauTab";
 import AdminTiefbauTab from "@/components/admin/AdminTiefbauTab";
 import AdminStrassenbauTab from "@/components/admin/AdminStrassenbauTab";
 import AdminServicesTab from "@/components/admin/AdminServicesTab";
+import AdminContactTab from "@/components/admin/AdminContactTab";
 
 interface SiteContent {
   id: string;
@@ -187,33 +188,7 @@ const Admin = () => {
     setSaving(false);
   };
 
-  // Service handling is now done by AdminServicesTab
-
-  const handleContactChange = (id: string, field: keyof ContactInfo, value: string) => {
-    setContactInfo(prev =>
-      prev.map(item => item.id === id ? { ...item, [field]: value } : item)
-    );
-  };
-
-  const saveContactInfo = async () => {
-    setSaving(true);
-    
-    for (const info of contactInfo) {
-      const { error } = await supabase
-        .from("contact_info")
-        .update({ value: info.value })
-        .eq("id", info.id);
-      
-      if (error) {
-        toast.error("Erreur lors de la sauvegarde");
-        setSaving(false);
-        return;
-      }
-    }
-
-    toast.success("Informations de contact sauvegardées!");
-    setSaving(false);
-  };
+  // Service and contact handling is now done by dedicated components
 
   const handleLogout = async () => {
     await signOut();
@@ -356,30 +331,14 @@ const Admin = () => {
           </TabsContent>
 
           {/* Contact Tab */}
-          <TabsContent value="contact" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">Informations de contact</h2>
-              <Button onClick={saveContactInfo} disabled={saving}>
-                <Save className="w-4 h-4 mr-2" />
-                {saving ? "Sauvegarde..." : "Sauvegarder"}
-              </Button>
-            </div>
-
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <div className="space-y-4">
-                {contactInfo.map((info) => (
-                  <div key={info.id}>
-                    <label className="block text-sm font-medium text-muted-foreground mb-2 capitalize">
-                      {info.type}
-                    </label>
-                    <Input
-                      value={info.value}
-                      onChange={(e) => handleContactChange(info.id, "value", e.target.value)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+          <TabsContent value="contact">
+            <AdminContactTab
+              contactInfo={contactInfo}
+              setContactInfo={setContactInfo}
+              saving={saving}
+              setSaving={setSaving}
+              onRefresh={fetchData}
+            />
           </TabsContent>
 
           {/* Projects Tab */}

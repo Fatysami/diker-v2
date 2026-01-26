@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useContactInfo } from "@/hooks/useContactInfo";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const { data: contactData } = useContactInfo();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,11 +92,11 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
             <a
-              href="tel:+4921222663931"
+              href={contactData?.phoneHref || "tel:+4921222663931"}
               className="flex items-center gap-2 text-primary-foreground/80 hover:text-primary transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="text-sm font-medium">0212 22 66 39 31</span>
+              <span className="text-sm font-medium">{contactData?.phone || "0212 22 66 39 31"}</span>
             </a>
             <Button variant="default" size="sm" asChild>
               <Link to="/anfrage">Jetzt Angebot anfordern</Link>
