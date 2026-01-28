@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, Save, Loader2, MapPin, Tags, Image, Upload } from "lucide-react";
+import { Plus, Trash2, Save, Loader2, MapPin, Tags, Image, Upload, Construction, HardHat, Pipette, Leaf } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   useGartenServiceTagsAdmin,
@@ -16,6 +16,7 @@ import {
 } from "@/hooks/useGartenServiceTags";
 import { useSiteContent, useUpdateSiteContent } from "@/hooks/useSiteContent";
 import { supabase } from "@/integrations/supabase/client";
+import ServiceTagsManager from "./ServiceTagsManager";
 
 const AdminGartenSettingsTab = () => {
   const { toast } = useToast();
@@ -415,6 +416,28 @@ const AdminGartenSettingsTab = () => {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Service Tags for Other Services */}
+      <ServiceTagsManager
+        service="strassenbau"
+        title="Straßenbau Tags"
+        description="Tags die auf der Straßenbau-Seite angezeigt werden (z.B. Parkplätze, Asphaltierung)"
+        icon={<Construction className="w-5 h-5" />}
+      />
+
+      <ServiceTagsManager
+        service="tiefbau"
+        title="Tiefbau Tags"
+        description="Tags die auf der Tiefbau-Seite angezeigt werden (z.B. Erdarbeiten, Fundamente)"
+        icon={<HardHat className="w-5 h-5" />}
+      />
+
+      <ServiceTagsManager
+        service="kanalbau"
+        title="Kanalbau Tags"
+        description="Tags die auf der Kanalbau-Seite angezeigt werden (z.B. Dichtheitsprüfung, Abwasserleitungen)"
+        icon={<Pipette className="w-5 h-5" />}
+      />
     </div>
   );
 };

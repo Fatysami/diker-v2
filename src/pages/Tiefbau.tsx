@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import tiefbauImg from "@/assets/service-tiefbau.jpg";
 import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
 import { useTiefbauSections } from "@/hooks/useTiefbauSections";
+import { useServiceTags } from "@/hooks/useServiceTags";
 
 const iconMap: Record<string, LucideIcon> = {
   Users,
@@ -15,7 +16,8 @@ const iconMap: Record<string, LucideIcon> = {
   Settings,
 };
 
-const services = [
+// Fallback services if database is empty
+const defaultServices = [
   "Erdarbeiten",
   "Fundamente",
   "Baugründung",
@@ -26,6 +28,11 @@ const services = [
 
 const Tiefbau = () => {
   const { sections, loading } = useTiefbauSections();
+  const { data: serviceTags } = useServiceTags("tiefbau");
+  
+  const services = serviceTags && serviceTags.length > 0 
+    ? serviceTags.map(tag => tag.name) 
+    : defaultServices;
 
   useSEOHead({
     title: "Tiefbau Solingen | Erdarbeiten & Fundamente",
