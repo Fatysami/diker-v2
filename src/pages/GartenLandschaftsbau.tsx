@@ -6,9 +6,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GartenProjectCard from "@/components/garten/GartenProjectCard";
 import { useGartenProjects } from "@/hooks/useGartenProjects";
+import { useGartenServiceTags } from "@/hooks/useGartenServiceTags";
 import gartenImg from "@/assets/service-garten.jpg";
 
-const services = [
+// Fallback services in case database is empty
+const fallbackServices = [
   "Terrassenbau",
   "Pflasterarbeiten",
   "Rollrasen",
@@ -21,6 +23,10 @@ const services = [
 
 const GartenLandschaftsbau = () => {
   const { data: projects, isLoading } = useGartenProjects();
+  const { data: serviceTags, isLoading: tagsLoading } = useGartenServiceTags();
+
+  // Use database tags if available, otherwise fallback
+  const services = serviceTags?.length ? serviceTags.map(t => t.name) : fallbackServices;
 
   useSEOHead({
     title: "Garten- & Landschaftsbau Solingen | Terrassen & Pflaster",

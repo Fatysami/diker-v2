@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction, MessageSquare, Info
+  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction, MessageSquare, Info, Settings
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
@@ -20,6 +20,7 @@ import AdminServicesTab from "@/components/admin/AdminServicesTab";
 import AdminContactTab from "@/components/admin/AdminContactTab";
 import AdminTestimonialsTab from "@/components/admin/AdminTestimonialsTab";
 import AdminAboutTab from "@/components/admin/AdminAboutTab";
+import AdminGartenSettingsTab from "@/components/admin/AdminGartenSettingsTab";
 
 interface SiteContent {
   id: string;
@@ -291,6 +292,10 @@ const Admin = () => {
               <Info className="w-4 h-4" />
               Über Uns
             </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2">
+              <Settings className="w-4 h-4" />
+              Einstellungen
+            </TabsTrigger>
             <TabsTrigger value="testimonials" className="gap-2">
               <MessageSquare className="w-4 h-4" />
               Témoignages
@@ -425,6 +430,14 @@ const Admin = () => {
               setSaving={setSaving}
               onRefresh={fetchData}
             />
+          </TabsContent>
+
+          {/* Settings Tab - Google Maps & Garten Tags */}
+          <TabsContent value="settings">
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-foreground">Einstellungen</h2>
+              <AdminGartenSettingsTab />
+            </div>
           </TabsContent>
 
           {/* Testimonials Tab */}

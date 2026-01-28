@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useContactInfo } from "@/hooks/useContactInfo";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,6 +25,11 @@ const Contact = () => {
   const isFormInView = useInView(formRef, { once: true, margin: "-50px" });
   
   const { data: contactData } = useContactInfo();
+  const { data: mapsUrlContent } = useSiteContent("contact", "google_maps_url");
+  
+  // Default maps URL as fallback
+  const defaultMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2508.844899285567!2d7.0823!3d51.1657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8d683b3e2d9e7%3A0x4e2c1c9c9c9c9c9c!2sWittkuller%20Str.%20161%2C%2042719%20Solingen!5e0!3m2!1sde!2sde!4v1699999999999!5m2!1sde!2sde";
+  const mapsUrl = mapsUrlContent?.value || defaultMapsUrl;
 
   // Build contact info array from dynamic data
   const contactInfo = useMemo(() => {
@@ -301,7 +307,7 @@ const Contact = () => {
               className="bg-muted rounded-xl h-48 flex items-center justify-center border border-border overflow-hidden"
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2508.844899285567!2d7.0823!3d51.1657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8d683b3e2d9e7%3A0x4e2c1c9c9c9c9c9c!2sWittkuller%20Str.%20161%2C%2042719%20Solingen!5e0!3m2!1sde!2sde!4v1699999999999!5m2!1sde!2sde"
+                src={mapsUrl}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
