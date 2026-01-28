@@ -214,6 +214,7 @@ const Admin = () => {
 
   const groupedContent = content
     .filter(item => item.section !== 'contact') // Exclude contact section (handled in Contact tab)
+    .filter(item => !(item.section === 'branding' && item.key === 'favicon_url')) // Exclude favicon (handled in Settings tab)
     .reduce((acc, item) => {
       if (!acc[item.section]) acc[item.section] = [];
       acc[item.section].push(item);
