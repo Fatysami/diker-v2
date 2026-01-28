@@ -224,63 +224,63 @@ const AdminGartenSettingsTab = () => {
             Das Favicon erscheint im Browser-Tab und in Lesezeichen
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-start gap-6">
-            {/* Favicon Preview */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-lg border border-border bg-muted flex items-center justify-center overflow-hidden">
-                {faviconUrl ? (
-                  <img 
-                    src={faviconUrl} 
-                    alt="Favicon Vorschau" 
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <Image className="w-8 h-8 text-muted-foreground" />
-                )}
-              </div>
-              <span className="text-xs text-muted-foreground">Vorschau</span>
+        <CardContent className="space-y-6">
+          {/* Upload Section - Primary Action */}
+          <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg border border-dashed border-border">
+            <div className="w-16 h-16 rounded-lg border border-border bg-background flex items-center justify-center overflow-hidden shrink-0">
+              {faviconUrl ? (
+                <img 
+                  src={faviconUrl} 
+                  alt="Favicon Vorschau" 
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <Image className="w-8 h-8 text-muted-foreground" />
+              )}
             </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium mb-2">Aktuelles Favicon</p>
+              <input
+                ref={faviconInputRef}
+                type="file"
+                accept="image/*,.ico,.png,.svg"
+                className="hidden"
+                onChange={handleFaviconUpload}
+              />
+              <Button
+                onClick={() => faviconInputRef.current?.click()}
+                disabled={uploadingFavicon}
+                className="w-full sm:w-auto"
+              >
+                {uploadingFavicon ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4 mr-2" />
+                )}
+                Neues Bild hochladen
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                Empfohlen: PNG oder ICO, 32x32 oder 64x64 Pixel
+              </p>
+            </div>
+          </div>
 
-            {/* Upload and URL input */}
-            <div className="flex-1 space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  value={faviconUrl}
-                  onChange={(e) => setFaviconUrl(e.target.value)}
-                  placeholder="https://... oder /favicon.png"
-                />
-                <Button onClick={handleSaveFaviconUrl} disabled={updateSiteContent.isPending}>
-                  {updateSiteContent.isPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">oder</span>
-                <input
-                  ref={faviconInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFaviconUpload}
-                />
-                <Button
-                  variant="outline"
-                  onClick={() => faviconInputRef.current?.click()}
-                  disabled={uploadingFavicon}
-                >
-                  {uploadingFavicon ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Bild hochladen
-                </Button>
-              </div>
+          {/* URL Input - Alternative */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Oder URL eingeben:</label>
+            <div className="flex gap-2">
+              <Input
+                value={faviconUrl}
+                onChange={(e) => setFaviconUrl(e.target.value)}
+                placeholder="https://example.com/favicon.png"
+              />
+              <Button onClick={handleSaveFaviconUrl} disabled={updateSiteContent.isPending}>
+                {updateSiteContent.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+              </Button>
             </div>
           </div>
         </CardContent>
