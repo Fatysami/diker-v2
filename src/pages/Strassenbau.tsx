@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
 import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
 import { useStrassenbauSections } from "@/hooks/useStrassenbauSections";
+import { useServiceTags } from "@/hooks/useServiceTags";
 
 const iconMap: Record<string, LucideIcon> = {
   Users,
@@ -15,7 +16,8 @@ const iconMap: Record<string, LucideIcon> = {
   Settings,
 };
 
-const services = [
+// Fallback services if database is empty
+const defaultServices = [
   "Parkplätze",
   "Straßen",
   "Fahrradwege",
@@ -26,6 +28,11 @@ const services = [
 
 const Strassenbau = () => {
   const { sections, loading } = useStrassenbauSections();
+  const { data: serviceTags } = useServiceTags("strassenbau");
+  
+  const services = serviceTags && serviceTags.length > 0 
+    ? serviceTags.map(tag => tag.name) 
+    : defaultServices;
 
   useSEOHead({
     title: "Straßenbau Solingen | Asphaltierung & Pflasterarbeiten",

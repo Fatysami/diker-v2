@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import kanalbauImg from "@/assets/service-kanalbau.jpg";
 import ServiceFeatureCard from "@/components/services/ServiceFeatureCard";
 import { useKanalbauSections } from "@/hooks/useKanalbauSections";
+import { useServiceTags } from "@/hooks/useServiceTags";
 
 const iconMap: Record<string, LucideIcon> = {
   AlertTriangle,
@@ -19,7 +20,8 @@ const iconMap: Record<string, LucideIcon> = {
   Wrench,
 };
 
-const services = [
+// Fallback services if database is empty
+const defaultServices = [
   "Dichtheitsprüfung Kanal",
   "Abwasserleitungen",
   "Wasserleitungen",
@@ -30,6 +32,11 @@ const services = [
 
 const Kanalbau = () => {
   const { sections, loading } = useKanalbauSections();
+  const { data: serviceTags } = useServiceTags("kanalbau");
+  
+  const services = serviceTags && serviceTags.length > 0 
+    ? serviceTags.map(tag => tag.name) 
+    : defaultServices;
 
   useSEOHead({
     title: "Kanalbau & Dichtheitsprüfung Solingen | Rohrleitungen",
