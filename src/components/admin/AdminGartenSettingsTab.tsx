@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Trash2, Save, Loader2, MapPin, Tags } from "lucide-react";
+import { Plus, Trash2, Save, Loader2, MapPin, Tags, Image, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   useGartenServiceTagsAdmin,
@@ -15,11 +15,13 @@ import {
   GartenServiceTag,
 } from "@/hooks/useGartenServiceTags";
 import { useSiteContent, useUpdateSiteContent } from "@/hooks/useSiteContent";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminGartenSettingsTab = () => {
   const { toast } = useToast();
   const { data: tags, isLoading: tagsLoading } = useGartenServiceTagsAdmin();
   const { data: mapsContent, isLoading: mapsLoading } = useSiteContent("contact", "google_maps_url");
+  const { data: faviconContent, isLoading: faviconLoading } = useSiteContent("branding", "favicon_url");
   
   const updateTag = useUpdateGartenServiceTag();
   const createTag = useCreateGartenServiceTag();
@@ -29,12 +31,98 @@ const AdminGartenSettingsTab = () => {
   const [newTagName, setNewTagName] = useState("");
   const [mapsUrl, setMapsUrl] = useState("");
   const [mapsUrlLoaded, setMapsUrlLoaded] = useState(false);
+  const [faviconUrl, setFaviconUrl] = useState("");
+  const [faviconLoaded, setFaviconLoaded] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const faviconInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize maps URL when data loads
   if (mapsContent && !mapsUrlLoaded) {
     setMapsUrl(mapsContent.value);
     setMapsUrlLoaded(true);
   }
+
+  // Initialize favicon URL when data loads
+  if (faviconContent && !faviconLoaded) {
+    setFaviconUrl(faviconContent.value);
+    setFaviconLoaded(true);
+  }
+
+  const handleFaviconUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Fehler",
+        description: "Bitte wählen Sie eine Bilddatei aus.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingFavicon(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `favicon-${Date.now()}.${fileExt}`;
+      const filePath = `branding/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('site-images')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('site-images')
+        .getPublicUrl(filePath);
+
+      setFaviconUrl(publicUrl);
+
+      // Save to database
+      await updateSiteContent.mutateAsync({
+        section: "branding",
+        key: "favicon_url",
+        value: publicUrl,
+      });
+
+      toast({
+        title: "Erfolg",
+        description: "Favicon wurde hochgeladen und gespeichert.",
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Fehler",
+        description: "Favicon konnte nicht hochgeladen werden.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingFavicon(false);
+    }
+  };
+
+  const handleSaveFaviconUrl = async () => {
+    try {
+      await updateSiteContent.mutateAsync({
+        section: "branding",
+        key: "favicon_url",
+        value: faviconUrl,
+      });
+      toast({
+        title: "Erfolg",
+        description: "Favicon URL wurde aktualisiert.",
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Favicon URL konnte nicht gespeichert werden.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleCreateTag = async () => {
     if (!newTagName.trim()) {
@@ -115,7 +203,7 @@ const AdminGartenSettingsTab = () => {
     }
   };
 
-  if (tagsLoading || mapsLoading) {
+  if (tagsLoading || mapsLoading || faviconLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -125,6 +213,78 @@ const AdminGartenSettingsTab = () => {
 
   return (
     <div className="space-y-8">
+      {/* Favicon Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Image className="w-5 h-5" />
+            Favicon
+          </CardTitle>
+          <CardDescription>
+            Das Favicon erscheint im Browser-Tab und in Lesezeichen
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-start gap-6">
+            {/* Favicon Preview */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-16 h-16 rounded-lg border border-border bg-muted flex items-center justify-center overflow-hidden">
+                {faviconUrl ? (
+                  <img 
+                    src={faviconUrl} 
+                    alt="Favicon Vorschau" 
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <Image className="w-8 h-8 text-muted-foreground" />
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground">Vorschau</span>
+            </div>
+
+            {/* Upload and URL input */}
+            <div className="flex-1 space-y-4">
+              <div className="flex gap-2">
+                <Input
+                  value={faviconUrl}
+                  onChange={(e) => setFaviconUrl(e.target.value)}
+                  placeholder="https://... oder /favicon.png"
+                />
+                <Button onClick={handleSaveFaviconUrl} disabled={updateSiteContent.isPending}>
+                  {updateSiteContent.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">oder</span>
+                <input
+                  ref={faviconInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFaviconUpload}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => faviconInputRef.current?.click()}
+                  disabled={uploadingFavicon}
+                >
+                  {uploadingFavicon ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
+                  Bild hochladen
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       {/* Google Maps Section */}
       <Card>
         <CardHeader>

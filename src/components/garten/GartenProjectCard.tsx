@@ -2,6 +2,7 @@ import {
   Warehouse, Map, Grid3X3, Flower2, LayoutGrid, DoorOpen, 
   TreeDeciduous, Fence, LucideIcon, ImageIcon 
 } from "lucide-react";
+import ClickableImage from "@/components/ui/ClickableImage";
 
 interface GartenProjectCardProps {
   title: string;
@@ -49,11 +50,11 @@ const GartenProjectCard = ({
       {/* Large main image */}
       <div className="w-2/3 relative overflow-hidden bg-muted">
         {imageUrl ? (
-          <img
+          <ClickableImage
             src={imageUrl}
             alt={`${title} - Hauptbild`}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            className="w-full h-full object-cover"
+            containerClassName="w-full h-full"
           />
         ) : (
           <ImagePlaceholder icon={IconComponent} size="large" />
@@ -64,11 +65,11 @@ const GartenProjectCard = ({
       <div className="w-1/3 flex flex-col">
         <div className="flex-1 relative overflow-hidden bg-muted border-l border-b border-border/30">
           {imageUrl2 ? (
-            <img
+            <ClickableImage
               src={imageUrl2}
               alt={`${title} - Bild 2`}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
+              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -76,11 +77,11 @@ const GartenProjectCard = ({
         </div>
         <div className="flex-1 relative overflow-hidden bg-muted border-l border-b border-border/30">
           {imageUrl3 ? (
-            <img
+            <ClickableImage
               src={imageUrl3}
               alt={`${title} - Bild 3`}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
+              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -88,11 +89,11 @@ const GartenProjectCard = ({
         </div>
         <div className="flex-1 relative overflow-hidden bg-muted border-l border-border/30">
           {imageUrl4 ? (
-            <img
+            <ClickableImage
               src={imageUrl4}
               alt={`${title} - Bild 4`}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
+              className="w-full h-full object-cover"
+              containerClassName="w-full h-full"
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
