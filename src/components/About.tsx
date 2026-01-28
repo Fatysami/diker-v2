@@ -2,6 +2,7 @@ import { Award, Clock, Users, Wrench, CheckCircle, ThumbsUp } from "lucide-react
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { useAboutStats } from "@/hooks/useAboutStats";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
 
 // Icon mapping for dynamic icons
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -20,6 +21,15 @@ const fallbackStats = [
   { id: "3", stat_value: "100", stat_suffix: "%", label: "Qualitätsgarantie", icon: "Award", display_order: 3 },
   { id: "4", stat_value: "50", stat_suffix: "+", label: "Moderne Maschinen", icon: "Wrench", display_order: 4 },
 ];
+
+// Default content as fallback
+const defaultContent = {
+  badge: "Über Uns",
+  headline: "Ihr erster Ansprechpartner in Solingen",
+  paragraph_1: "Wir als Firma Diker haben Ihre Bauvorhaben im Griff. Ob Parkplatz, Straße, Fahrradweg oder Baugründung – wir arbeiten mit Herz und Können. Vertrauen Sie uns Ihre Herausforderungen an.",
+  paragraph_2: "Wir bieten ein modernes Equipment, ein kompetentes Team und vor allem Leidenschaft zur Sache. Wo immer es gilt, erstklassige Arbeit rund um Solingen und Umgebung abzuliefern, sind wir Ihr Partner.",
+  paragraph_3: "Mit Hilfe von zertifizierten Bausachverständigen, Architekten, Ingenieuren oder Spezialisten können wir Ihnen eine umfassende Beratung bei Neubau oder Sanierung anbieten.",
+};
 
 // Animated counter component
 const Counter = ({ value, suffix, duration = 2000 }: { value: number; suffix: string; duration?: number }) => {
@@ -63,9 +73,13 @@ const About = () => {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const { data: dbStats, isLoading } = useAboutStats();
+  const { data: content } = useHomepageContent("about");
 
   // Use database stats or fallback
   const stats = dbStats && dbStats.length > 0 ? dbStats : fallbackStats;
+  
+  // Merge database content with defaults
+  const c = { ...defaultContent, ...content };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -88,6 +102,11 @@ const About = () => {
     },
   };
 
+  // Split headline for gradient effect on last part
+  const headlineParts = c.headline.split(" in ");
+  const firstPart = headlineParts[0];
+  const secondPart = headlineParts[1] || "";
+
   return (
     <section id="ueber-uns" className="section-padding bg-secondary text-secondary-foreground">
       <div className="container-custom">
@@ -100,12 +119,16 @@ const About = () => {
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4">
-              Über Uns
+              {c.badge}
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              Ihr erster Ansprechpartner
-              <br />
-              <span className="text-gradient">in Solingen</span>
+              {firstPart}
+              {secondPart && (
+                <>
+                  <br />
+                  <span className="text-gradient">in {secondPart}</span>
+                </>
+              )}
             </h2>
             <div className="space-y-4 text-secondary-foreground/80">
               <motion.p
@@ -114,9 +137,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                Wir als Firma Diker haben Ihre Bauvorhaben im Griff. Ob Parkplatz, 
-                Straße, Fahrradweg oder Baugründung – wir arbeiten mit Herz und Können. 
-                Vertrauen Sie uns Ihre Herausforderungen an.
+                {c.paragraph_1}
               </motion.p>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -124,9 +145,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
               >
-                Wir bieten ein modernes Equipment, ein kompetentes Team und vor allem 
-                Leidenschaft zur Sache. Wo immer es gilt, erstklassige Arbeit rund um 
-                Solingen und Umgebung abzuliefern, sind wir Ihr Partner.
+                {c.paragraph_2}
               </motion.p>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -134,9 +153,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
               >
-                Mit Hilfe von zertifizierten Bausachverständigen, Architekten, Ingenieuren 
-                oder Spezialisten können wir Ihnen eine umfassende Beratung bei Neubau 
-                oder Sanierung anbieten.
+                {c.paragraph_3}
               </motion.p>
             </div>
           </motion.div>
