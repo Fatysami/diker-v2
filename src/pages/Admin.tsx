@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  LogOut, Save, ArrowLeft, 
-  FileText, Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction, MessageSquare, Info, Settings
+  LogOut, ArrowLeft, Home,
+  Wrench, Image, Phone, Loader2, Leaf, Pipette, HardHat, Construction, MessageSquare, Info, Settings
 } from "lucide-react";
 import { toast } from "sonner";
 import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
@@ -21,6 +19,7 @@ import AdminContactTab from "@/components/admin/AdminContactTab";
 import AdminTestimonialsTab from "@/components/admin/AdminTestimonialsTab";
 import AdminAboutTab from "@/components/admin/AdminAboutTab";
 import AdminGartenSettingsTab from "@/components/admin/AdminGartenSettingsTab";
+import AdminHomepageTab from "@/components/admin/AdminHomepageTab";
 
 interface SiteContent {
   id: string;
@@ -171,34 +170,6 @@ const Admin = () => {
     setLoading(false);
   };
 
-  const handleContentChange = (id: string, value: string) => {
-    setContent(prev => 
-      prev.map(item => item.id === id ? { ...item, value } : item)
-    );
-  };
-
-  const saveContent = async () => {
-    setSaving(true);
-    
-    for (const item of content) {
-      const { error } = await supabase
-        .from("site_content")
-        .update({ value: item.value })
-        .eq("id", item.id);
-      
-      if (error) {
-        toast.error("Fehler beim Speichern");
-        setSaving(false);
-        return;
-      }
-    }
-
-    toast.success("Inhalt gespeichert!");
-    setSaving(false);
-  };
-
-  // Service and contact handling is now done by dedicated components
-
   const handleLogout = async () => {
     await signOut();
     navigate("/");
@@ -211,15 +182,6 @@ const Admin = () => {
       </div>
     );
   }
-
-  const groupedContent = content
-    .filter(item => item.section !== 'contact') // Exclude contact section (handled in Contact tab)
-    .filter(item => !(item.section === 'branding' && item.key === 'favicon_url')) // Exclude favicon (handled in Settings tab)
-    .reduce((acc, item) => {
-      if (!acc[item.section]) acc[item.section] = [];
-      acc[item.section].push(item);
-      return acc;
-    }, {} as Record<string, SiteContent[]>);
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -255,11 +217,11 @@ const Admin = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="content" className="space-y-6">
+        <Tabs defaultValue="homepage" className="space-y-6">
           <TabsList className="bg-card border border-border flex-wrap">
-            <TabsTrigger value="content" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Inhalt
+            <TabsTrigger value="homepage" className="gap-2">
+              <Home className="w-4 h-4" />
+              Startseite
             </TabsTrigger>
             <TabsTrigger value="services" className="gap-2">
               <Wrench className="w-4 h-4" />
@@ -303,44 +265,12 @@ const Admin = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Content Tab */}
-          <TabsContent value="content" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">Website-Inhalt</h2>
-              <Button onClick={saveContent} disabled={saving}>
-                <Save className="w-4 h-4 mr-2" />
-                {saving ? "Speichern..." : "Speichern"}
-              </Button>
-            </div>
-
-            {Object.entries(groupedContent).map(([section, items]) => (
-              <div key={section} className="bg-card rounded-xl p-6 border border-border">
-                <h3 className="text-lg font-semibold text-card-foreground mb-4 capitalize">
-                  Bereich: {section}
-                </h3>
-                <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.id}>
-                      <label className="block text-sm font-medium text-muted-foreground mb-2 capitalize">
-                        {item.key.replace(/_/g, " ")}
-                      </label>
-                      {item.value.length > 100 ? (
-                        <Textarea
-                          value={item.value}
-                          onChange={(e) => handleContentChange(item.id, e.target.value)}
-                          rows={4}
-                        />
-                      ) : (
-                        <Input
-                          value={item.value}
-                          onChange={(e) => handleContentChange(item.id, e.target.value)}
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+          {/* Homepage Tab */}
+          <TabsContent value="homepage">
+            <AdminHomepageTab
+              saving={saving}
+              setSaving={setSaving}
+            />
           </TabsContent>
 
           {/* Services Tab */}

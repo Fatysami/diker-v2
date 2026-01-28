@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useServices } from "@/hooks/useServices";
 import { useImageLightbox } from "@/hooks/useImageLightbox";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
 
 // Fallback images for services without uploaded images
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
@@ -16,6 +17,13 @@ const fallbackImages: Record<string, string> = {
   "Straßentiefbau": tiefbauImg,
   "Kanalbau": kanalbauImg,
   "Garten- & Landschaftsbau": gartenImg,
+};
+
+// Default content as fallback
+const defaultContent = {
+  badge: "Unsere Leistungen",
+  headline: "Kompetenz auf ganzer Linie",
+  description: "Von der Beratung bis zur Fertigstellung – wir bieten Ihnen umfassende Lösungen für Ihre Bauprojekte.",
 };
 
 // Clickable service image component
@@ -50,9 +58,10 @@ const Services = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
   const { services, loading, error } = useServices();
+  const { data: content } = useHomepageContent("services");
 
-  // Debug log
-  console.log("Services loaded:", services.length, "isInView:", isInView);
+  // Merge database content with defaults
+  const c = { ...defaultContent, ...content };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -101,14 +110,13 @@ const Services = () => {
           className="text-center mb-16"
         >
           <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-4">
-            Unsere Leistungen
+            {c.badge}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Kompetenz auf ganzer Linie
+            {c.headline}
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Von der Beratung bis zur Fertigstellung – wir bieten Ihnen 
-            umfassende Lösungen für Ihre Bauprojekte.
+            {c.description}
           </p>
         </motion.div>
 
@@ -123,7 +131,7 @@ const Services = () => {
           {services.map((service) => {
             const imageUrl = service.image_url || fallbackImages[service.title] || strassenbauImg;
             
-            const content = (
+            const cardContent = (
               <>
                 {/* Image - Clickable */}
                 <ServiceImage imageUrl={imageUrl} title={service.title} />
@@ -165,11 +173,11 @@ const Services = () => {
                     to={service.link}
                     className="group relative bg-card rounded-2xl overflow-hidden border border-border block cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 hover:border-primary/30"
                   >
-                    {content}
+                    {cardContent}
                   </Link>
                 ) : (
                   <div className="group relative bg-card rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 hover:border-primary/30">
-                    {content}
+                    {cardContent}
                   </div>
                 )}
               </motion.div>

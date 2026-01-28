@@ -4,6 +4,17 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import heroImage from "@/assets/hero-construction.jpg";
+import { useHomepageContent } from "@/hooks/useHomepageContent";
+
+// Default content as fallback
+const defaultContent = {
+  badge: "Ihr Partner in Solingen & Umgebung",
+  headline: "Straßenbau mit Leidenschaft und Präzision",
+  subheadline: "Wir als Firma Diker haben Ihre Bauvorhaben im Griff. Ob Parkplatz, Straße, Fahrradweg oder Baugründung – wir arbeiten mit Herz und Können.",
+  highlight_1: "Modernes Equipment",
+  highlight_2: "Kompetentes Team",
+  highlight_3: "Termingerechte Ausführung",
+};
 
 const Hero = () => {
   const ref = useRef(null);
@@ -12,15 +23,16 @@ const Hero = () => {
     offset: ["start start", "end start"],
   });
 
+  const { data: content } = useHomepageContent("hero");
+  
+  // Merge database content with defaults
+  const c = { ...defaultContent, ...content };
+
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const highlights = [
-    "Modernes Equipment",
-    "Kompetentes Team",
-    "Termingerechte Ausführung",
-  ];
+  const highlights = [c.highlight_1, c.highlight_2, c.highlight_3];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,6 +55,11 @@ const Hero = () => {
       },
     },
   };
+
+  // Split headline into parts for styling
+  const headlineParts = c.headline.split(" ");
+  const lastWord = headlineParts.pop();
+  const firstPart = headlineParts.join(" ");
 
   return (
     <section
@@ -79,7 +96,7 @@ const Hero = () => {
           >
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
             <span className="text-primary text-sm font-medium">
-              Ihr Partner in Solingen & Umgebung
+              {c.badge}
             </span>
           </motion.div>
 
@@ -88,10 +105,8 @@ const Hero = () => {
             variants={itemVariants}
             className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight mb-6"
           >
-            Straßenbau mit{" "}
-            <span className="text-gradient">Leidenschaft</span>
-            <br />
-            und Präzision
+            {firstPart}{" "}
+            <span className="text-gradient">{lastWord}</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -99,8 +114,7 @@ const Hero = () => {
             variants={itemVariants}
             className="text-lg md:text-xl text-primary-foreground/70 mb-8 max-w-2xl"
           >
-            Wir als Firma Diker haben Ihre Bauvorhaben im Griff. Ob Parkplatz, Straße, 
-            Fahrradweg oder Baugründung – wir arbeiten mit Herz und Können.
+            {c.subheadline}
           </motion.p>
 
           {/* Highlights */}
