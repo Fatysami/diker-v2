@@ -119,10 +119,10 @@ const AdminServicesTab = ({
         if (error) throw error;
       }
 
-      toast.success("Services erfolgreich gespeichert!");
+      toast.success("Leistungen erfolgreich gespeichert!");
     } catch (error) {
       console.error('Error saving services:', error);
-      toast.error("Fehler beim Speichern der Services");
+      toast.error("Fehler beim Speichern der Leistungen");
     } finally {
       setSaving(false);
     }
@@ -131,7 +131,7 @@ const AdminServicesTab = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Homepage Services</h2>
+        <h2 className="text-2xl font-bold text-foreground">Homepage Leistungen</h2>
         <Button onClick={saveServices} disabled={saving}>
           <Save className="w-4 h-4 mr-2" />
           {saving ? "Speichern..." : "Speichern"}
@@ -213,9 +213,9 @@ const AdminServicesTab = ({
                       onChange={(e) => handleServiceChange(service.id, "title", e.target.value)}
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-muted-foreground mb-2">
-                      Icône (Lucide)
+                    <div>
+                      <label className="block text-sm font-medium text-muted-foreground mb-2">
+                        Icon (Lucide)
                     </label>
                     <Input
                       value={service.icon}

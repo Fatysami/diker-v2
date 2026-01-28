@@ -95,11 +95,11 @@ const AdminAboutTab = ({
         if (error) throw error;
       }
 
-      toast.success("Section 'Über Uns' sauvegardée !");
+      toast.success("Bereich 'Über Uns' gespeichert!");
       onRefresh();
     } catch (error) {
       console.error("Error saving about section:", error);
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error("Fehler beim Speichern");
     } finally {
       setSaving(false);
     }
@@ -132,11 +132,11 @@ const AdminAboutTab = ({
         .update({ value: urlData.publicUrl })
         .eq("id", aboutImage.id);
 
-      toast.success("Image téléchargée !");
+      toast.success("Bild hochgeladen!");
       onRefresh();
     } catch (error) {
       console.error("Error uploading image:", error);
-      toast.error("Erreur lors du téléchargement");
+      toast.error("Fehler beim Hochladen");
     } finally {
       setUploading(false);
     }
@@ -148,14 +148,14 @@ const AdminAboutTab = ({
         <h2 className="text-2xl font-bold text-foreground">Section "Über Uns"</h2>
         <Button onClick={saveAll} disabled={saving}>
           <Save className="w-4 h-4 mr-2" />
-          {saving ? "Sauvegarde..." : "Tout sauvegarder"}
+          {saving ? "Speichern..." : "Alles speichern"}
         </Button>
       </div>
 
       {/* Content Section */}
       <div className="bg-card rounded-xl p-6 border border-border">
         <h3 className="text-lg font-semibold text-card-foreground mb-4">
-          Contenu textuel
+          Textinhalt
         </h3>
         <div className="space-y-4">
           {aboutTitle && (
@@ -163,23 +163,23 @@ const AdminAboutTab = ({
               <label className="block text-sm font-medium text-muted-foreground mb-2">
                 Titre
               </label>
-              <Input
-                value={aboutTitle.value}
-                onChange={(e) => handleContentChange(aboutTitle.id, e.target.value)}
-                placeholder="Titre de la section"
+                <Input
+                  value={aboutTitle.value}
+                  onChange={(e) => handleContentChange(aboutTitle.id, e.target.value)}
+                  placeholder="Titel des Bereichs"
               />
             </div>
           )}
           {aboutDescription && (
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-2">
-                Description
+                Beschreibung
               </label>
               <Textarea
                 value={aboutDescription.value}
                 onChange={(e) => handleContentChange(aboutDescription.id, e.target.value)}
                 rows={4}
-                placeholder="Description de l'entreprise"
+                placeholder="Beschreibung des Unternehmens"
               />
             </div>
           )}
@@ -189,7 +189,7 @@ const AdminAboutTab = ({
       {/* Image Section */}
       <div className="bg-card rounded-xl p-6 border border-border">
         <h3 className="text-lg font-semibold text-card-foreground mb-4">
-          Image de la section
+          Bereichsbild
         </h3>
         <div className="flex items-start gap-6">
           <div className="w-48 h-32 bg-muted rounded-lg overflow-hidden flex items-center justify-center">
@@ -200,7 +200,7 @@ const AdminAboutTab = ({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-muted-foreground text-sm">Pas d'image</span>
+              <span className="text-muted-foreground text-sm">Kein Bild</span>
             )}
           </div>
           <div>
@@ -215,12 +215,12 @@ const AdminAboutTab = ({
               <Button variant="outline" asChild disabled={uploading}>
                 <span>
                   <Upload className="w-4 h-4 mr-2" />
-                  {uploading ? "Téléchargement..." : "Changer l'image"}
+                  {uploading ? "Hochladen..." : "Bild ändern"}
                 </span>
               </Button>
             </label>
             <p className="text-xs text-muted-foreground mt-2">
-              Format recommandé : 800x600px, JPG ou PNG
+              Empfohlenes Format: 800x600px, JPG oder PNG
             </p>
           </div>
         </div>
@@ -249,7 +249,7 @@ const AdminAboutTab = ({
                       onChange={(e) =>
                         handleStatChange(stat.id, "stat_value", e.target.value)
                       }
-                      placeholder="Valeur"
+                      placeholder="Wert"
                       className="w-24"
                     />
                     <Input

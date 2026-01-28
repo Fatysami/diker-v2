@@ -62,12 +62,12 @@ const AdminTestimonialsTab = ({
 
       if (error) throw error;
 
-      toast.success("Témoignage sauvegardé !");
+      toast.success("Bewertung gespeichert!");
       setEditingId(null);
       onRefresh();
     } catch (error) {
       console.error("Error saving testimonial:", error);
-      toast.error("Erreur lors de la sauvegarde");
+      toast.error("Fehler beim Speichern");
     } finally {
       setSaving(false);
     }
@@ -83,8 +83,8 @@ const AdminTestimonialsTab = ({
       const { data, error } = await supabase
         .from("testimonials")
         .insert({
-          client_name: "Nouveau Client",
-          content: "Entrez le témoignage ici...",
+          client_name: "Neuer Kunde",
+          content: "Geben Sie hier die Bewertung ein...",
           rating: 5,
           display_order: newOrder,
           is_featured: false,
@@ -95,19 +95,19 @@ const AdminTestimonialsTab = ({
 
       if (error) throw error;
 
-      toast.success("Nouveau témoignage ajouté !");
+      toast.success("Neue Bewertung hinzugefügt!");
       onRefresh();
       if (data) setEditingId(data.id);
     } catch (error) {
       console.error("Error adding testimonial:", error);
-      toast.error("Erreur lors de l'ajout");
+      toast.error("Fehler beim Hinzufügen");
     } finally {
       setSaving(false);
     }
   };
 
   const deleteTestimonial = async (id: string) => {
-    if (!confirm("Supprimer ce témoignage ?")) return;
+    if (!confirm("Diese Bewertung löschen?")) return;
 
     setSaving(true);
     try {
@@ -115,11 +115,11 @@ const AdminTestimonialsTab = ({
 
       if (error) throw error;
 
-      toast.success("Témoignage supprimé !");
+      toast.success("Bewertung gelöscht!");
       onRefresh();
     } catch (error) {
       console.error("Error deleting testimonial:", error);
-      toast.error("Erreur lors de la suppression");
+      toast.error("Fehler beim Löschen");
     } finally {
       setSaving(false);
     }
@@ -128,10 +128,10 @@ const AdminTestimonialsTab = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-foreground">Témoignages Clients</h2>
+        <h2 className="text-2xl font-bold text-foreground">Kundenbewertungen</h2>
         <Button onClick={addTestimonial} disabled={saving}>
           <Plus className="w-4 h-4 mr-2" />
-          Ajouter un témoignage
+          Bewertung hinzufügen
         </Button>
       </div>
 
@@ -148,19 +148,19 @@ const AdminTestimonialsTab = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
-                      Nom du client
+                      Kundenname
                     </label>
                     <Input
                       value={testimonial.client_name}
                       onChange={(e) =>
                         handleChange(testimonial.id, "client_name", e.target.value)
                       }
-                      placeholder="Nom du client"
+                      placeholder="Name des Kunden"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
-                      Rôle / Titre
+                      Rolle / Titel
                     </label>
                     <Input
                       value={testimonial.role || ""}
@@ -172,21 +172,21 @@ const AdminTestimonialsTab = ({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-1">
-                      Entreprise
+                      Unternehmen
                     </label>
                     <Input
                       value={testimonial.company || ""}
                       onChange={(e) =>
                         handleChange(testimonial.id, "company", e.target.value)
                       }
-                      placeholder="Nom de l'entreprise"
+                      placeholder="Unternehmensname"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-1">
-                    Témoignage
+                    Bewertungstext
                   </label>
                   <Textarea
                     value={testimonial.content}
@@ -194,14 +194,14 @@ const AdminTestimonialsTab = ({
                       handleChange(testimonial.id, "content", e.target.value)
                     }
                     rows={3}
-                    placeholder="Le contenu du témoignage..."
+                    placeholder="Der Inhalt der Bewertung..."
                   />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-6">
                   <div className="flex items-center gap-2">
                     <label className="text-sm font-medium text-muted-foreground">
-                      Note:
+                      Bewertung:
                     </label>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -230,7 +230,7 @@ const AdminTestimonialsTab = ({
                         handleChange(testimonial.id, "is_featured", checked)
                       }
                     />
-                    <label className="text-sm text-muted-foreground">Mis en avant</label>
+                    <label className="text-sm text-muted-foreground">Hervorgehoben</label>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -244,7 +244,7 @@ const AdminTestimonialsTab = ({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <label className="text-sm text-muted-foreground">Ordre:</label>
+                    <label className="text-sm text-muted-foreground">Reihenfolge:</label>
                     <Input
                       type="number"
                       value={testimonial.display_order}
@@ -280,7 +280,7 @@ const AdminTestimonialsTab = ({
 
         {testimonials.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
-            Aucun témoignage. Cliquez sur "Ajouter un témoignage" pour commencer.
+            Keine Bewertungen vorhanden. Klicken Sie auf "Bewertung hinzufügen" um zu beginnen.
           </div>
         )}
       </div>
