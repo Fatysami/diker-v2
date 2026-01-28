@@ -70,7 +70,7 @@ const AdminProjectsTab = ({
 
     if (uploadError) {
       console.error("Upload error:", uploadError);
-      toast.error("Erreur lors de l'upload de l'image");
+      toast.error("Fehler beim Hochladen des Bildes");
       return null;
     }
 
@@ -94,12 +94,12 @@ const AdminProjectsTab = ({
         .eq('id', projectId);
 
       if (error) {
-        toast.error("Erreur lors de la mise à jour");
+        toast.error("Fehler beim Aktualisieren");
       } else {
         setProjects(prev =>
           prev.map(item => item.id === projectId ? { ...item, image_url: publicUrl } : item)
         );
-        toast.success("Image mise à jour!");
+        toast.success("Bild aktualisiert!");
       }
     }
     
@@ -122,19 +122,19 @@ const AdminProjectsTab = ({
         .eq('id', project.id);
       
       if (error) {
-        toast.error("Erreur lors de la sauvegarde");
+        toast.error("Fehler beim Speichern");
         setSaving(false);
         return;
       }
     }
 
-    toast.success("Projets sauvegardés!");
+    toast.success("Projekte gespeichert!");
     setSaving(false);
   };
 
   const addProject = async () => {
     if (!newProject.title || !newProject.image) {
-      toast.error("Titre et image requis");
+      toast.error("Titel und Bild erforderlich");
       return;
     }
 
@@ -162,18 +162,18 @@ const AdminProjectsTab = ({
       .single();
 
     if (error) {
-      toast.error("Erreur lors de la création");
+      toast.error("Fehler beim Erstellen");
     } else if (data) {
       setProjects(prev => [...prev, data]);
       setNewProject({ title: "", description: "", category: "Straßenbau", image: null });
-      toast.success("Projet ajouté!");
+      toast.success("Projekt hinzugefügt!");
     }
 
     setAddingNew(false);
   };
 
   const deleteProject = async (id: string) => {
-    if (!confirm("Supprimer ce projet ?")) return;
+    if (!confirm("Dieses Projekt löschen?")) return;
 
     const { error } = await supabase
       .from('projects')
@@ -181,10 +181,10 @@ const AdminProjectsTab = ({
       .eq('id', id);
 
     if (error) {
-      toast.error("Erreur lors de la suppression");
+      toast.error("Fehler beim Löschen");
     } else {
       setProjects(prev => prev.filter(p => p.id !== id));
-      toast.success("Projet supprimé!");
+      toast.success("Projekt gelöscht!");
     }
   };
 
@@ -194,7 +194,7 @@ const AdminProjectsTab = ({
         <h2 className="text-2xl font-bold text-foreground">Projekte / Galerie</h2>
         <Button onClick={saveProjects} disabled={saving}>
           <Save className="w-4 h-4 mr-2" />
-          {saving ? "Sauvegarde..." : "Sauvegarder"}
+          {saving ? "Speichern..." : "Speichern"}
         </Button>
       </div>
 
@@ -202,22 +202,22 @@ const AdminProjectsTab = ({
       <div className="bg-card rounded-xl p-6 border border-border border-dashed">
         <h3 className="text-lg font-semibold text-card-foreground mb-4 flex items-center gap-2">
           <Plus className="w-5 h-5" />
-          Nouveau projet
+          Neues Projekt
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
-              Titre *
-            </label>
-            <Input
-              value={newProject.title}
-              onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Nom du projet"
-            />
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Titel *
+              </label>
+              <Input
+                value={newProject.title}
+                onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Projektname"
+              />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
-              Catégorie
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Kategorie
             </label>
             <Select
               value={newProject.category}
@@ -233,15 +233,15 @@ const AdminProjectsTab = ({
               </SelectContent>
             </Select>
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
-              Description
-            </label>
-            <Textarea
-              value={newProject.description}
-              onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Description du projet"
-              rows={2}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Beschreibung
+              </label>
+              <Textarea
+                value={newProject.description}
+                onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="Projektbeschreibung"
+                rows={2}
             />
           </div>
           <div className="md:col-span-2">
@@ -270,12 +270,12 @@ const AdminProjectsTab = ({
               {addingNew ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Ajout en cours...
+                  Wird hinzugefügt...
                 </>
               ) : (
                 <>
                   <Plus className="w-4 h-4 mr-2" />
-                  Ajouter le projet
+                  Projekt hinzufügen
                 </>
               )}
             </Button>
@@ -288,7 +288,7 @@ const AdminProjectsTab = ({
         {projects.length === 0 ? (
           <div className="bg-card rounded-xl p-12 border border-border text-center">
             <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">Aucun projet pour le moment</p>
+            <p className="text-muted-foreground">Noch keine Projekte vorhanden</p>
           </div>
         ) : (
           projects.map((project) => (
@@ -319,7 +319,7 @@ const AdminProjectsTab = ({
                       ) : (
                         <Upload className="w-4 h-4" />
                       )}
-                      Changer
+                      Ändern
                     </div>
                   </label>
                 </div>
@@ -338,7 +338,7 @@ const AdminProjectsTab = ({
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-muted-foreground mb-2">
-                        Catégorie
+                        Kategorie
                       </label>
                       <Select
                         value={project.category || "Straßenbau"}
@@ -358,7 +358,7 @@ const AdminProjectsTab = ({
                   
                   <div>
                     <label className="block text-sm font-medium text-muted-foreground mb-2">
-                      Description
+                      Beschreibung
                     </label>
                     <Textarea
                       value={project.description || ""}
@@ -378,11 +378,11 @@ const AdminProjectsTab = ({
                           className="w-4 h-4"
                         />
                         <label htmlFor={`active-${project.id}`} className="text-sm text-muted-foreground">
-                          Actif (visible sur le site)
+                          Aktiv (sichtbar auf der Webseite)
                         </label>
                       </div>
                       <div className="flex items-center gap-2">
-                        <label className="text-sm text-muted-foreground">Ordre:</label>
+                        <label className="text-sm text-muted-foreground">Reihenfolge:</label>
                         <Input
                           type="number"
                           value={project.display_order}
@@ -397,7 +397,7 @@ const AdminProjectsTab = ({
                       onClick={() => deleteProject(project.id)}
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
-                      Supprimer
+                      Löschen
                     </Button>
                   </div>
                 </div>

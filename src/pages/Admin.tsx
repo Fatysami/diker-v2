@@ -133,7 +133,7 @@ const Admin = () => {
       if (!user) {
         navigate("/admin/login");
       } else if (!isAdmin) {
-        toast.error("Accès refusé. Vous n'êtes pas administrateur.");
+        toast.error("Zugriff verweigert. Sie sind kein Administrator.");
         navigate("/");
       } else {
         fetchData();
@@ -187,13 +187,13 @@ const Admin = () => {
         .eq("id", item.id);
       
       if (error) {
-        toast.error("Erreur lors de la sauvegarde");
+        toast.error("Fehler beim Speichern");
         setSaving(false);
         return;
       }
     }
 
-    toast.success("Contenu sauvegardé!");
+    toast.success("Inhalt gespeichert!");
     setSaving(false);
   };
 
@@ -231,7 +231,7 @@ const Admin = () => {
               className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Retour au site
+              Zurück zur Webseite
             </a>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2">
@@ -246,7 +246,7 @@ const Admin = () => {
             <span className="text-sm text-muted-foreground">{user?.email}</span>
             <Button variant="outline" size="sm" onClick={handleLogout}>
               <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
+              Abmelden
             </Button>
           </div>
         </div>
@@ -258,11 +258,11 @@ const Admin = () => {
           <TabsList className="bg-card border border-border flex-wrap">
             <TabsTrigger value="content" className="gap-2">
               <FileText className="w-4 h-4" />
-              Contenu
+              Inhalt
             </TabsTrigger>
             <TabsTrigger value="services" className="gap-2">
               <Wrench className="w-4 h-4" />
-              Services
+              Leistungen
             </TabsTrigger>
             <TabsTrigger value="projects" className="gap-2">
               <Image className="w-4 h-4" />
@@ -286,7 +286,7 @@ const Admin = () => {
             </TabsTrigger>
             <TabsTrigger value="contact" className="gap-2">
               <Phone className="w-4 h-4" />
-              Contact
+              Kontakt
             </TabsTrigger>
             <TabsTrigger value="about" className="gap-2">
               <Info className="w-4 h-4" />
@@ -298,24 +298,24 @@ const Admin = () => {
             </TabsTrigger>
             <TabsTrigger value="testimonials" className="gap-2">
               <MessageSquare className="w-4 h-4" />
-              Témoignages
+              Bewertungen
             </TabsTrigger>
           </TabsList>
 
           {/* Content Tab */}
           <TabsContent value="content" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">Contenu du site</h2>
+              <h2 className="text-2xl font-bold text-foreground">Website-Inhalt</h2>
               <Button onClick={saveContent} disabled={saving}>
                 <Save className="w-4 h-4 mr-2" />
-                {saving ? "Sauvegarde..." : "Sauvegarder"}
+                {saving ? "Speichern..." : "Speichern"}
               </Button>
             </div>
 
             {Object.entries(groupedContent).map(([section, items]) => (
               <div key={section} className="bg-card rounded-xl p-6 border border-border">
                 <h3 className="text-lg font-semibold text-card-foreground mb-4 capitalize">
-                  Section: {section}
+                  Bereich: {section}
                 </h3>
                 <div className="space-y-4">
                   {items.map((item) => (

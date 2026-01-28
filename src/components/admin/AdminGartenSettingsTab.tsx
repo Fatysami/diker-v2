@@ -133,7 +133,7 @@ const AdminGartenSettingsTab = () => {
             Google Maps
           </CardTitle>
           <CardDescription>
-            URL de l'iframe Google Maps affichée dans la section Contact
+            URL des Google Maps iFrame, das im Kontaktbereich angezeigt wird
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
