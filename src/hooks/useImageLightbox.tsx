@@ -46,8 +46,14 @@ export const LightboxProvider = ({ children }: { children: ReactNode }) => {
 
 export const useImageLightbox = () => {
   const context = useContext(LightboxContext);
+  // Return a no-op version if used outside provider (prevents crashes)
   if (!context) {
-    throw new Error("useImageLightbox must be used within a LightboxProvider");
+    console.warn("useImageLightbox: No LightboxProvider found, lightbox functionality disabled");
+    return {
+      state: { isOpen: false, imageSrc: "", imageAlt: "" },
+      openImage: () => {},
+      closeImage: () => {},
+    };
   }
   return context;
 };
