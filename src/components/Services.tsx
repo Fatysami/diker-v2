@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useServices } from "@/hooks/useServices";
+import { useImageLightbox } from "@/hooks/useImageLightbox";
 
 // Fallback images for services without uploaded images
 import strassenbauImg from "@/assets/service-strassenbau.jpg";
@@ -15,6 +16,34 @@ const fallbackImages: Record<string, string> = {
   "Straßentiefbau": tiefbauImg,
   "Kanalbau": kanalbauImg,
   "Garten- & Landschaftsbau": gartenImg,
+};
+
+// Clickable service image component
+const ServiceImage = ({ imageUrl, title }: { imageUrl: string; title: string }) => {
+  const { openImage } = useImageLightbox();
+  
+  return (
+    <div 
+      className="relative h-64 overflow-hidden cursor-pointer group/img"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openImage(imageUrl, title);
+      }}
+    >
+      <img
+        src={imageUrl}
+        alt={title}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+      <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover/img:bg-black/20 transition-all duration-300">
+        <span className="text-white opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 bg-black/50 px-3 py-1 rounded-full text-sm">
+          Bild vergrößern
+        </span>
+      </div>
+    </div>
+  );
 };
 
 const Services = () => {
@@ -96,15 +125,8 @@ const Services = () => {
             
             const content = (
               <>
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={imageUrl}
-                    alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-                </div>
+                {/* Image - Clickable */}
+                <ServiceImage imageUrl={imageUrl} title={service.title} />
 
                 {/* Content */}
                 <div className="p-6 lg:p-8">
