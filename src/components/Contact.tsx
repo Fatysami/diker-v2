@@ -319,7 +319,7 @@ const Contact = () => {
                 />
               </div>
               <a
-                href="https://www.google.com/maps/place/Diker+Stra%C3%9Fen-,+Tief-+und+Landschaftsbau+e.K./@51.18865,7.0471537,17z"
+                href="https://maps.google.com/?q=Diker+Straßen-,+Tief-+und+Landschaftsbau+e.K.,+Wittkuller+Str.+161,+42719+Solingen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
