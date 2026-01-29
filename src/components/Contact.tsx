@@ -304,18 +304,29 @@ const Contact = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-muted rounded-xl h-48 flex items-center justify-center border border-border overflow-hidden"
+              className="space-y-3"
             >
-              <iframe
-                src={mapsUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Standort Diker Straßenbau"
-              />
+              <div className="bg-muted rounded-xl h-48 flex items-center justify-center border border-border overflow-hidden">
+                <iframe
+                  src={mapsUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Standort Diker Straßenbau"
+                />
+              </div>
+              <a
+                href="https://www.google.com/maps/place/Diker+Stra%C3%9Fen-,+Tief-+und+Landschaftsbau+e.K./@51.18865,7.0471537,17z"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+              >
+                <MapPin className="w-4 h-4" />
+                In Google Maps öffnen
+              </a>
             </motion.div>
           </div>
         </div>
