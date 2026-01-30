@@ -128,6 +128,10 @@ const Strassenbau = () => {
                     imageUrl2={section.image_url_2}
                     imageUrl3={section.image_url_3}
                     imageUrl4={section.image_url_4}
+                    imageFocalPoint={section.image_focal_point}
+                    imageFocalPoint2={section.image_focal_point_2}
+                    imageFocalPoint3={section.image_focal_point_3}
+                    imageFocalPoint4={section.image_focal_point_4}
                     index={index}
                   />
                 );

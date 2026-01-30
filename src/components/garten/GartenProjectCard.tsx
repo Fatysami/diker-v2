@@ -3,6 +3,7 @@ import {
   TreeDeciduous, Fence, LucideIcon, ImageIcon 
 } from "lucide-react";
 import ClickableImage from "@/components/ui/ClickableImage";
+import { focalPointToObjectPosition } from "@/components/admin/FocalPointSelector";
 
 interface GartenProjectCardProps {
   title: string;
@@ -11,6 +12,10 @@ interface GartenProjectCardProps {
   imageUrl2: string | null;
   imageUrl3: string | null;
   imageUrl4: string | null;
+  imageFocalPoint?: string | null;
+  imageFocalPoint2?: string | null;
+  imageFocalPoint3?: string | null;
+  imageFocalPoint4?: string | null;
   icon: string;
   index: number;
 }
@@ -38,7 +43,11 @@ const GartenProjectCard = ({
   imageUrl, 
   imageUrl2, 
   imageUrl3, 
-  imageUrl4, 
+  imageUrl4,
+  imageFocalPoint,
+  imageFocalPoint2,
+  imageFocalPoint3,
+  imageFocalPoint4,
   icon, 
   index 
 }: GartenProjectCardProps) => {
@@ -55,6 +64,7 @@ const GartenProjectCard = ({
             alt={`${title} - Hauptbild`}
             className="w-full h-full object-cover"
             containerClassName="w-full h-full"
+            style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint) }}
           />
         ) : (
           <ImagePlaceholder icon={IconComponent} size="large" />
@@ -70,6 +80,7 @@ const GartenProjectCard = ({
               alt={`${title} - Bild 2`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint2) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -82,6 +93,7 @@ const GartenProjectCard = ({
               alt={`${title} - Bild 3`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint3) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -94,6 +106,7 @@ const GartenProjectCard = ({
               alt={`${title} - Bild 4`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint4) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
