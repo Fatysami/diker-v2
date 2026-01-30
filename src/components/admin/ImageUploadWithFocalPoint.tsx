@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Upload, Loader2, Image as ImageIcon } from "lucide-react";
+import { Upload, Loader2, Image as ImageIcon, Info } from "lucide-react";
 import { FocalPointSelector, FocalPoint, focalPointToObjectPosition } from "./FocalPointSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ImageUploadWithFocalPointProps {
   id: string;
@@ -16,6 +22,7 @@ interface ImageUploadWithFocalPointProps {
   tableName: string;
   imageField: string;
   focalPointField: string;
+  showHint?: boolean;
 }
 
 const ImageUploadWithFocalPoint = ({
@@ -30,6 +37,7 @@ const ImageUploadWithFocalPoint = ({
   tableName,
   imageField,
   focalPointField,
+  showHint = true,
 }: ImageUploadWithFocalPointProps) => {
   const [uploading, setUploading] = useState(false);
 
@@ -81,9 +89,12 @@ const ImageUploadWithFocalPoint = ({
     }
   };
 
+  // Use consistent 4:3 aspect ratio for all project images
+  const aspectRatioClass = isLarge ? "aspect-[4/3]" : "aspect-[4/3]";
+
   return (
     <div className="space-y-2">
-      <div className={`relative ${isLarge ? "aspect-[4/3]" : "aspect-square"}`}>
+      <div className={`relative ${aspectRatioClass}`}>
         <div className="w-full h-full rounded-lg overflow-hidden bg-muted">
           {imageUrl ? (
             <img
@@ -93,12 +104,15 @@ const ImageUploadWithFocalPoint = ({
               style={{ objectPosition: focalPointToObjectPosition(focalPoint) }}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-4">
               <ImageIcon
-                className={`${
-                  isLarge ? "w-12 h-12" : "w-6 h-6"
-                } text-muted-foreground/30`}
+                className="w-8 h-8 text-muted-foreground/30"
               />
+              {showHint && (
+                <p className="text-xs text-muted-foreground/60 text-center">
+                  Querformat empfohlen
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -125,14 +139,38 @@ const ImageUploadWithFocalPoint = ({
           {label}
         </span>
       </div>
+      
+      {/* Focal point selector with help tooltip */}
       {imageUrl && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">Fokus:</span>
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-muted-foreground">Fokus:</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="w-3 h-3 text-muted-foreground/60 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[200px]">
+                  <p className="text-xs">
+                    Wählen Sie, welcher Teil des Bildes im Vordergrund stehen soll.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <FocalPointSelector
             value={(focalPoint as FocalPoint) || "center"}
             onChange={handleFocalPointChange}
           />
         </div>
+      )}
+      
+      {/* Format recommendation */}
+      {showHint && isLarge && !imageUrl && (
+        <p className="text-xs text-muted-foreground/70 flex items-center gap-1">
+          <Info className="w-3 h-3" />
+          Querformat-Bilder (16:9 oder 4:3) funktionieren am besten
+        </p>
       )}
     </div>
   );
