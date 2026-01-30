@@ -9,6 +9,10 @@ export interface GartenProject {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   icon: string;
   display_order: number;
   is_active: boolean;
@@ -26,6 +30,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "Warehouse",
     display_order: 1,
     is_active: true,
@@ -40,6 +48,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "Map",
     display_order: 2,
     is_active: true,
@@ -54,6 +66,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "Grid3X3",
     display_order: 3,
     is_active: true,
@@ -68,6 +84,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "Flower2",
     display_order: 4,
     is_active: true,
@@ -82,6 +102,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "LayoutGrid",
     display_order: 5,
     is_active: true,
@@ -96,6 +120,10 @@ const fallbackProjects: GartenProject[] = [
     image_url_2: null,
     image_url_3: null,
     image_url_4: null,
+    image_focal_point: "center",
+    image_focal_point_2: "center",
+    image_focal_point_3: "center",
+    image_focal_point_4: "center",
     icon: "DoorOpen",
     display_order: 6,
     is_active: true,

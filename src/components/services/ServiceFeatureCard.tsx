@@ -1,5 +1,6 @@
 import { LucideIcon, ImageIcon } from "lucide-react";
 import ClickableImage from "@/components/ui/ClickableImage";
+import { focalPointToObjectPosition } from "@/components/admin/FocalPointSelector";
 
 interface ServiceFeatureCardProps {
   title: string;
@@ -9,6 +10,10 @@ interface ServiceFeatureCardProps {
   imageUrl2?: string | null;
   imageUrl3?: string | null;
   imageUrl4?: string | null;
+  imageFocalPoint?: string | null;
+  imageFocalPoint2?: string | null;
+  imageFocalPoint3?: string | null;
+  imageFocalPoint4?: string | null;
   index: number;
 }
 
@@ -26,6 +31,10 @@ const ServiceFeatureCard = ({
   imageUrl2,
   imageUrl3,
   imageUrl4,
+  imageFocalPoint,
+  imageFocalPoint2,
+  imageFocalPoint3,
+  imageFocalPoint4,
   index 
 }: ServiceFeatureCardProps) => {
   const isEven = index % 2 === 0;
@@ -40,6 +49,7 @@ const ServiceFeatureCard = ({
             alt={`${title} - Hauptbild`}
             className="w-full h-full object-cover"
             containerClassName="w-full h-full"
+            style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint) }}
           />
         ) : (
           <ImagePlaceholder icon={IconComponent} size="large" />
@@ -55,6 +65,7 @@ const ServiceFeatureCard = ({
               alt={`${title} - Bild 2`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint2) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -67,6 +78,7 @@ const ServiceFeatureCard = ({
               alt={`${title} - Bild 3`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint3) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -79,6 +91,7 @@ const ServiceFeatureCard = ({
               alt={`${title} - Bild 4`}
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
+              style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint4) }}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />

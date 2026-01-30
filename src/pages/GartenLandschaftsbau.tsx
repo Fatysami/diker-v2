@@ -136,6 +136,10 @@ const GartenLandschaftsbau = () => {
                   imageUrl2={project.image_url_2}
                   imageUrl3={project.image_url_3}
                   imageUrl4={project.image_url_4}
+                  imageFocalPoint={project.image_focal_point}
+                  imageFocalPoint2={project.image_focal_point_2}
+                  imageFocalPoint3={project.image_focal_point_3}
+                  imageFocalPoint4={project.image_focal_point_4}
                   icon={project.icon}
                   index={index}
                 />

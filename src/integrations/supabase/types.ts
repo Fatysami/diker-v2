@@ -114,6 +114,10 @@ export type Database = {
           display_order: number
           icon: string
           id: string
+          image_focal_point: string | null
+          image_focal_point_2: string | null
+          image_focal_point_3: string | null
+          image_focal_point_4: string | null
           image_url: string | null
           image_url_2: string | null
           image_url_3: string | null
@@ -128,6 +132,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -142,6 +150,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -185,6 +197,10 @@ export type Database = {
           display_order: number
           icon: string
           id: string
+          image_focal_point: string | null
+          image_focal_point_2: string | null
+          image_focal_point_3: string | null
+          image_focal_point_4: string | null
           image_url: string | null
           image_url_2: string | null
           image_url_3: string | null
@@ -199,6 +215,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -213,6 +233,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -258,6 +282,7 @@ export type Database = {
           description: string | null
           display_order: number
           id: string
+          image_focal_point: string | null
           image_url: string
           is_active: boolean
           title: string
@@ -269,6 +294,7 @@ export type Database = {
           description?: string | null
           display_order?: number
           id?: string
+          image_focal_point?: string | null
           image_url: string
           is_active?: boolean
           title: string
@@ -280,6 +306,7 @@ export type Database = {
           description?: string | null
           display_order?: number
           id?: string
+          image_focal_point?: string | null
           image_url?: string
           is_active?: boolean
           title?: string
@@ -362,6 +389,10 @@ export type Database = {
           display_order: number
           icon: string
           id: string
+          image_focal_point: string | null
+          image_focal_point_2: string | null
+          image_focal_point_3: string | null
+          image_focal_point_4: string | null
           image_url: string | null
           image_url_2: string | null
           image_url_3: string | null
@@ -376,6 +407,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -390,6 +425,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -479,6 +518,10 @@ export type Database = {
           display_order: number
           icon: string
           id: string
+          image_focal_point: string | null
+          image_focal_point_2: string | null
+          image_focal_point_3: string | null
+          image_focal_point_4: string | null
           image_url: string | null
           image_url_2: string | null
           image_url_3: string | null
@@ -493,6 +536,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null
@@ -507,6 +554,10 @@ export type Database = {
           display_order?: number
           icon?: string
           id?: string
+          image_focal_point?: string | null
+          image_focal_point_2?: string | null
+          image_focal_point_3?: string | null
+          image_focal_point_4?: string | null
           image_url?: string | null
           image_url_2?: string | null
           image_url_3?: string | null

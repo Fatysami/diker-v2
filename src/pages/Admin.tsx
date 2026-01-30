@@ -66,6 +66,10 @@ interface GartenProject {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   icon: string;
   display_order: number;
   is_active: boolean;
@@ -80,6 +84,10 @@ interface KanalbauSection {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   display_order: number;
   is_active: boolean;
 }
@@ -93,6 +101,10 @@ interface TiefbauSection {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   display_order: number;
   is_active: boolean;
 }
@@ -106,6 +118,10 @@ interface StrassenbauSection {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   display_order: number;
   is_active: boolean;
 }

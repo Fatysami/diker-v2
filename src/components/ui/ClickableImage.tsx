@@ -8,6 +8,7 @@ interface ClickableImageProps {
   className?: string;
   containerClassName?: string;
   showZoomIcon?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ClickableImage = ({
@@ -16,6 +17,7 @@ const ClickableImage = ({
   className = "",
   containerClassName = "",
   showZoomIcon = true,
+  style,
 }: ClickableImageProps) => {
   const { openImage } = useImageLightbox();
 
@@ -34,6 +36,7 @@ const ClickableImage = ({
           "transition-transform duration-500 group-hover:scale-105",
           className
         )}
+        style={style}
         loading="lazy"
       />
       {showZoomIcon && (

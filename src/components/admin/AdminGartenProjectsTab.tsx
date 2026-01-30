@@ -10,8 +10,10 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Save, Plus, Trash2, Upload, Loader2, Image as ImageIcon, Leaf } from "lucide-react";
+import { Save, Plus, Trash2, Loader2, Image as ImageIcon, Leaf } from "lucide-react";
 import { toast } from "sonner";
+import ImageUploadWithFocalPoint from "./ImageUploadWithFocalPoint";
+import { FocalPoint } from "./FocalPointSelector";
 
 interface GartenProject {
   id: string;
@@ -21,6 +23,10 @@ interface GartenProject {
   image_url_2: string | null;
   image_url_3: string | null;
   image_url_4: string | null;
+  image_focal_point: string | null;
+  image_focal_point_2: string | null;
+  image_focal_point_3: string | null;
+  image_focal_point_4: string | null;
   icon: string;
   display_order: number;
   is_active: boolean;
@@ -45,8 +51,6 @@ const iconOptions = [
   { value: "Fence", label: "Zaun" },
 ];
 
-type ImageField = 'image_url' | 'image_url_2' | 'image_url_3' | 'image_url_4';
-
 const AdminGartenProjectsTab = ({ 
   projects, 
   setProjects, 
@@ -54,7 +58,6 @@ const AdminGartenProjectsTab = ({
   setSaving,
   onRefresh 
 }: AdminGartenProjectsTabProps) => {
-  const [uploading, setUploading] = useState<string | null>(null);
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -66,51 +69,6 @@ const AdminGartenProjectsTab = ({
     setProjects(prev =>
       prev.map(item => item.id === id ? { ...item, [field]: value } : item)
     );
-  };
-
-  const uploadImage = async (file: File, projectId?: string): Promise<string | null> => {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `garten/${projectId || crypto.randomUUID()}-${Date.now()}.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('site-images')
-      .upload(fileName, file, { upsert: true });
-
-    if (uploadError) {
-      console.error("Upload error:", uploadError);
-      toast.error("Fehler beim Hochladen des Bildes");
-      return null;
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('site-images')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
-  };
-
-  const handleImageUpload = async (projectId: string, file: File, imageField: ImageField) => {
-    setUploading(`${projectId}-${imageField}`);
-    
-    const publicUrl = await uploadImage(file, projectId);
-    
-    if (publicUrl) {
-      const { error } = await supabase
-        .from('garten_projects')
-        .update({ [imageField]: publicUrl })
-        .eq('id', projectId);
-
-      if (error) {
-        toast.error("Fehler beim Aktualisieren");
-      } else {
-        setProjects(prev =>
-          prev.map(item => item.id === projectId ? { ...item, [imageField]: publicUrl } : item)
-        );
-        toast.success("Bild aktualisiert!");
-      }
-    }
-    
-    setUploading(null);
   };
 
   const saveProjects = async () => {
@@ -162,7 +120,7 @@ const AdminGartenProjectsTab = ({
     if (error) {
       toast.error("Fehler beim Erstellen");
     } else if (data) {
-      setProjects(prev => [...prev, data]);
+      setProjects(prev => [...prev, data as GartenProject]);
       setNewProject({ title: "", description: "", icon: "Warehouse" });
       toast.success("Projekt hinzugefügt!");
     }
@@ -185,58 +143,6 @@ const AdminGartenProjectsTab = ({
       toast.success("Projekt gelöscht!");
     }
   };
-
-  const ImageUploadSlot = ({ 
-    projectId, 
-    imageUrl, 
-    imageField, 
-    label,
-    isLarge = false 
-  }: { 
-    projectId: string; 
-    imageUrl: string | null; 
-    imageField: ImageField;
-    label: string;
-    isLarge?: boolean;
-  }) => (
-    <div className={`relative ${isLarge ? 'aspect-[4/3]' : 'aspect-square'}`}>
-      <div className="w-full h-full rounded-lg overflow-hidden bg-muted">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={label}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ImageIcon className={`${isLarge ? 'w-12 h-12' : 'w-6 h-6'} text-muted-foreground/30`} />
-          </div>
-        )}
-      </div>
-      <label className="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/0 hover:bg-black/40 transition-colors group">
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleImageUpload(projectId, file, imageField);
-          }}
-        />
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2">
-          {uploading === `${projectId}-${imageField}` ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Upload className="w-4 h-4" />
-          )}
-          {imageUrl ? "Ändern" : "Hochladen"}
-        </div>
-      </label>
-      <span className="absolute bottom-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
-        {label}
-      </span>
-    </div>
-  );
 
   return (
     <div className="space-y-6">
@@ -326,42 +232,66 @@ const AdminGartenProjectsTab = ({
           projects.map((project) => (
             <div key={project.id} className="bg-card rounded-xl p-6 border border-border">
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {/* Images Grid - 4 slots */}
+                {/* Images Grid - 4 slots with focal point */}
                 <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-3">
-                    Bilder (1 groß + 3 klein)
+                    Bilder (1 groß + 3 klein) – Klicken Sie auf das 3x3 Raster um den Fokuspunkt zu setzen
                   </label>
                   <div className="grid grid-cols-3 gap-2">
                     {/* Main large image */}
                     <div className="col-span-2 row-span-3">
-                      <ImageUploadSlot 
-                        projectId={project.id}
+                      <ImageUploadWithFocalPoint
+                        id={project.id}
                         imageUrl={project.image_url}
-                        imageField="image_url"
+                        focalPoint={project.image_focal_point}
+                        onImageChange={(url) => handleProjectChange(project.id, "image_url", url)}
+                        onFocalPointChange={(fp) => handleProjectChange(project.id, "image_focal_point", fp)}
                         label="Hauptbild"
                         isLarge
+                        storagePath="garten"
+                        tableName="garten_projects"
+                        imageField="image_url"
+                        focalPointField="image_focal_point"
                       />
                     </div>
                     {/* Small image 1 */}
-                    <ImageUploadSlot 
-                      projectId={project.id}
+                    <ImageUploadWithFocalPoint
+                      id={project.id}
                       imageUrl={project.image_url_2}
-                      imageField="image_url_2"
+                      focalPoint={project.image_focal_point_2}
+                      onImageChange={(url) => handleProjectChange(project.id, "image_url_2", url)}
+                      onFocalPointChange={(fp) => handleProjectChange(project.id, "image_focal_point_2", fp)}
                       label="Bild 2"
+                      storagePath="garten"
+                      tableName="garten_projects"
+                      imageField="image_url_2"
+                      focalPointField="image_focal_point_2"
                     />
                     {/* Small image 2 */}
-                    <ImageUploadSlot 
-                      projectId={project.id}
+                    <ImageUploadWithFocalPoint
+                      id={project.id}
                       imageUrl={project.image_url_3}
-                      imageField="image_url_3"
+                      focalPoint={project.image_focal_point_3}
+                      onImageChange={(url) => handleProjectChange(project.id, "image_url_3", url)}
+                      onFocalPointChange={(fp) => handleProjectChange(project.id, "image_focal_point_3", fp)}
                       label="Bild 3"
+                      storagePath="garten"
+                      tableName="garten_projects"
+                      imageField="image_url_3"
+                      focalPointField="image_focal_point_3"
                     />
                     {/* Small image 3 */}
-                    <ImageUploadSlot 
-                      projectId={project.id}
+                    <ImageUploadWithFocalPoint
+                      id={project.id}
                       imageUrl={project.image_url_4}
-                      imageField="image_url_4"
+                      focalPoint={project.image_focal_point_4}
+                      onImageChange={(url) => handleProjectChange(project.id, "image_url_4", url)}
+                      onFocalPointChange={(fp) => handleProjectChange(project.id, "image_focal_point_4", fp)}
                       label="Bild 4"
+                      storagePath="garten"
+                      tableName="garten_projects"
+                      imageField="image_url_4"
+                      focalPointField="image_focal_point_4"
                     />
                   </div>
                 </div>
