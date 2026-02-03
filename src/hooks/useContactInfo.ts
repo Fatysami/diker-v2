@@ -16,6 +16,7 @@ export interface FormattedContactInfo {
   email: string;
   emailHref: string;
   hours: string;
+  notificationEmail: string;
 }
 
 const defaultContactInfo: FormattedContactInfo = {
@@ -25,6 +26,7 @@ const defaultContactInfo: FormattedContactInfo = {
   email: "info@dikerstrassenbau.de",
   emailHref: "mailto:info@dikerstrassenbau.de",
   hours: "Mo–Fr: 7:00–17:00 Uhr",
+  notificationEmail: "info@dikerstrassenbau.de",
 };
 
 // Helper to convert phone number to tel: href format
@@ -74,6 +76,9 @@ export const useContactInfo = () => {
             break;
           case "hours":
             result.hours = item.value;
+            break;
+          case "notification_email":
+            result.notificationEmail = item.value;
             break;
         }
       });
