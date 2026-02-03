@@ -1,10 +1,11 @@
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface QuoteRequest {
@@ -20,6 +21,53 @@ interface QuoteRequest {
   photos?: { name: string; data: string }[];
 }
 
+// Fetch notification email from database
+async function getNotificationEmail(): Promise<string> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  
+  const { data, error } = await supabase
+    .from("contact_info")
+    .select("value")
+    .eq("type", "notification_email")
+    .single();
+  
+  if (error || !data) {
+    console.log("Using fallback email, notification_email not found:", error);
+    return "info@dikerstrassenbau.de";
+  }
+  
+  return data.value;
+}
+
+// Fetch contact info for confirmation email
+async function getContactInfo(): Promise<{ phone: string; address: string }> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  
+  const { data, error } = await supabase
+    .from("contact_info")
+    .select("type, value")
+    .in("type", ["phone", "address"]);
+  
+  if (error || !data) {
+    console.log("Using fallback contact info:", error);
+    return {
+      phone: "0212 22 66 39 31",
+      address: "Wittkuller Str. 161, 42719 Solingen"
+    };
+  }
+  
+  const phone = data.find(d => d.type === "phone")?.value || "0212 22 66 39 31";
+  const address = data.find(d => d.type === "address")?.value || "Wittkuller Str. 161, 42719 Solingen";
+  
+  return { phone, address };
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -29,6 +77,11 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const data: QuoteRequest = await req.json();
     console.log("Received quote request:", { ...data, photos: data.photos?.length || 0 });
+
+    // Get notification email from database
+    const notificationEmail = await getNotificationEmail();
+    const contactInfo = await getContactInfo();
+    console.log("Sending to notification email:", notificationEmail);
 
     // Build email HTML for company
     const photoSection = data.photos && data.photos.length > 0
@@ -117,7 +170,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company with attachments
     const emailResponse = await resend.emails.send({
       from: "Diker Straßenbau <onboarding@resend.dev>",
-      to: ["info@dikerstrassenbau.de"],
+      to: [notificationEmail],
       reply_to: data.email,
       subject: `Neue Anfrage: ${data.workType} - ${data.firstName} ${data.lastName}`,
       html: htmlContent,
@@ -154,12 +207,12 @@ const handler = async (req: Request): Promise<Response> => {
               <li>Ort: ${data.city}</li>
             </ul>
             <p>Bei dringenden Anliegen erreichen Sie uns telefonisch unter:</p>
-            <p><strong>Tel: 0212 22 66 39 31</strong></p>
+            <p><strong>Tel: ${contactInfo.phone}</strong></p>
             <p>Mit freundlichen Grüßen,<br>Ihr Team von Diker Straßenbau</p>
           </div>
           <div class="footer">
             <p>Diker Straßenbau GmbH</p>
-            <p>Tersteegenstraße 1, 42653 Solingen</p>
+            <p>${contactInfo.address}</p>
           </div>
         </div>
       </body>

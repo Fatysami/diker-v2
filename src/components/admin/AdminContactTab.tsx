@@ -31,6 +31,8 @@ const getIconForType = (type: string) => {
       return Mail;
     case "hours":
       return Clock;
+    case "notification_email":
+      return Mail;
     default:
       return Phone;
   }
@@ -43,11 +45,30 @@ const getLabelForType = (type: string) => {
     case "phone":
       return "Telefon";
     case "email":
-      return "E-Mail";
+      return "E-Mail (öffentlich)";
     case "hours":
       return "Öffnungszeiten";
+    case "notification_email":
+      return "E-Mail für Formular-Empfang";
     default:
       return type;
+  }
+};
+
+const getHintForType = (type: string) => {
+  switch (type) {
+    case "phone":
+      return "Format: 0212 22 66 39 31";
+    case "email":
+      return "Diese E-Mail wird auf der Website angezeigt";
+    case "address":
+      return "Format: Straße Nr., PLZ Stadt";
+    case "hours":
+      return "Format: Mo–Fr: 7:00–17:00 Uhr";
+    case "notification_email":
+      return "An diese Adresse werden Kontakt- und Angebotsanfragen gesendet";
+    default:
+      return "";
   }
 };
 
@@ -106,27 +127,29 @@ const AdminContactTab = ({
           {contactInfo.map((info) => {
             const Icon = getIconForType(info.type);
             const label = getLabelForType(info.type);
+            const hint = getHintForType(info.type);
+            const isNotificationEmail = info.type === "notification_email";
             
             return (
-              <div key={info.id} className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-6">
-                  <Icon className="w-5 h-5 text-primary" />
+              <div key={info.id} className={`flex items-start gap-4 ${isNotificationEmail ? "p-4 bg-primary/5 rounded-lg border border-primary/20" : ""}`}>
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 mt-6 ${isNotificationEmail ? "bg-primary/20" : "bg-primary/10"}`}>
+                  <Icon className={`w-5 h-5 ${isNotificationEmail ? "text-primary" : "text-primary"}`} />
                 </div>
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-foreground mb-2">
                     {label}
+                    {isNotificationEmail && (
+                      <span className="ml-2 text-xs text-primary font-normal">(für Kontakt- und Angebotsformular)</span>
+                    )}
                   </label>
                   <Input
                     value={info.value}
                     onChange={(e) => handleContactChange(info.id, e.target.value)}
                     placeholder={`${label} eingeben...`}
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {info.type === "phone" && "Format: 0212 22 66 39 31"}
-                    {info.type === "email" && "Format: info@beispiel.de"}
-                    {info.type === "address" && "Format: Straße Nr., PLZ Stadt"}
-                    {info.type === "hours" && "Format: Mo–Fr: 7:00–17:00 Uhr"}
-                  </p>
+                  {hint && (
+                    <p className="text-xs text-muted-foreground mt-1">{hint}</p>
+                  )}
                 </div>
               </div>
             );

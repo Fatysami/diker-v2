@@ -1,11 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface ContactRequest {
@@ -14,6 +15,35 @@ interface ContactRequest {
   phone?: string;
   subject?: string;
   message: string;
+}
+
+// Fetch notification email and contact info from database
+async function getContactSettings(): Promise<{ notificationEmail: string; phone: string; address: string; publicEmail: string }> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+  
+  const { data, error } = await supabase
+    .from("contact_info")
+    .select("type, value");
+  
+  if (error || !data) {
+    console.log("Using fallback contact settings:", error);
+    return {
+      notificationEmail: "info@dikerstrassenbau.de",
+      phone: "0212 22 66 39 31",
+      address: "Wittkuller Str. 161, 42719 Solingen",
+      publicEmail: "info@dikerstrassenbau.de"
+    };
+  }
+  
+  return {
+    notificationEmail: data.find(d => d.type === "notification_email")?.value || "info@dikerstrassenbau.de",
+    phone: data.find(d => d.type === "phone")?.value || "0212 22 66 39 31",
+    address: data.find(d => d.type === "address")?.value || "Wittkuller Str. 161, 42719 Solingen",
+    publicEmail: data.find(d => d.type === "email")?.value || "info@dikerstrassenbau.de"
+  };
 }
 
 async function sendEmail(payload: {
@@ -57,6 +87,10 @@ const handler = async (req: Request): Promise<Response> => {
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+
+    // Get contact settings from database
+    const settings = await getContactSettings();
+    console.log("Sending to notification email:", settings.notificationEmail);
 
     // Build HTML content for company email
     const htmlContent = `
@@ -107,7 +141,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send email to company
     const emailResponse = await sendEmail({
       from: "Diker Straßenbau <onboarding@resend.dev>",
-      to: ["info@dikerstrassenbau.de"],
+      to: [settings.notificationEmail],
       reply_to: data.email,
       subject: data.subject ? `Kontaktanfrage: ${data.subject}` : `Neue Kontaktanfrage von ${data.name}`,
       html: htmlContent,
@@ -145,8 +179,8 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="padding: 20px; background: #1f2937; text-align: center;">
           <p style="color: #9ca3af; margin: 0 0 10px 0; font-size: 14px;">Diker Straßenbau</p>
           <p style="color: #9ca3af; margin: 0; font-size: 12px;">
-            Wittkuller Str. 161, 42719 Solingen<br>
-            Tel: 0212 22 66 39 31 | info@dikerstrassenbau.de
+            ${settings.address}<br>
+            Tel: ${settings.phone} | ${settings.publicEmail}
           </p>
         </div>
       </div>
