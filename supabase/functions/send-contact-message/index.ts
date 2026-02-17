@@ -31,18 +31,18 @@ async function getContactSettings(): Promise<{ notificationEmail: string; phone:
   if (error || !data) {
     console.log("Using fallback contact settings:", error);
     return {
-      notificationEmail: "info@dikerstrassenbau.de",
+      notificationEmail: "info@diker-bau.de",
       phone: "0212 22 66 39 31",
       address: "Wittkuller Str. 161, 42719 Solingen",
-      publicEmail: "info@dikerstrassenbau.de"
+      publicEmail: "info@diker-bau.de"
     };
   }
   
   return {
-    notificationEmail: data.find(d => d.type === "notification_email")?.value || "info@dikerstrassenbau.de",
+    notificationEmail: data.find(d => d.type === "notification_email")?.value || "info@diker-bau.de",
     phone: data.find(d => d.type === "phone")?.value || "0212 22 66 39 31",
     address: data.find(d => d.type === "address")?.value || "Wittkuller Str. 161, 42719 Solingen",
-    publicEmail: data.find(d => d.type === "email")?.value || "info@dikerstrassenbau.de"
+    publicEmail: data.find(d => d.type === "email")?.value || "info@diker-bau.de"
   };
 }
 
@@ -132,7 +132,7 @@ const handler = async (req: Request): Promise<Response> => {
         
         <div style="padding: 20px; background: #1f2937; text-align: center;">
           <p style="color: #9ca3af; margin: 0; font-size: 14px;">
-            Diese Nachricht wurde über das Kontaktformular auf dikerstrassenbau.de gesendet
+            Diese Nachricht wurde über das Kontaktformular auf diker-bau.de gesendet
           </p>
         </div>
       </div>

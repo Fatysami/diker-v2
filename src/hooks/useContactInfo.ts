@@ -23,10 +23,10 @@ const defaultContactInfo: FormattedContactInfo = {
   address: "Wittkuller Str. 161, 42719 Solingen",
   phone: "0212 22 66 39 31",
   phoneHref: "tel:+4921222663931",
-  email: "info@dikerstrassenbau.de",
-  emailHref: "mailto:info@dikerstrassenbau.de",
+  email: "info@diker-bau.de",
+  emailHref: "mailto:info@diker-bau.de",
   hours: "Mo–Fr: 7:00–17:00 Uhr",
-  notificationEmail: "info@dikerstrassenbau.de",
+  notificationEmail: "info@diker-bau.de",
 };
 
 // Helper to convert phone number to tel: href format
