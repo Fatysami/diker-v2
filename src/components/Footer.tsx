@@ -40,7 +40,7 @@ const Footer = () => {
                   Diker
                 </span>
                 <span className="text-secondary-foreground/60 text-xs leading-tight">
-                  Straßenbau
+                  Bau
                 </span>
               </div>
             </div>
