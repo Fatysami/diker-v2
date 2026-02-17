@@ -39,22 +39,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
         // Defer async operations with setTimeout to prevent deadlock
         if (session?.user) {
-          setTimeout(() => {
-            checkAdminStatus(session.user.id);
+          setTimeout(async () => {
+            await checkAdminStatus(session.user.id);
+            setLoading(false);
           }, 0);
         } else {
           setIsAdmin(false);
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkAdminStatus(session.user.id);
+        await checkAdminStatus(session.user.id);
       }
       setLoading(false);
     });
