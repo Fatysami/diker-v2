@@ -147,7 +147,7 @@ const AdminSetup = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@dikerstrassenbau.de"
+                  placeholder="admin@diker-bau.de"
                   className="pl-10"
                   required
                 />

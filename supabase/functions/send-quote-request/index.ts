@@ -36,7 +36,7 @@ async function getNotificationEmail(): Promise<string> {
   
   if (error || !data) {
     console.log("Using fallback email, notification_email not found:", error);
-    return "info@dikerstrassenbau.de";
+    return "info@diker-bau.de";
   }
   
   return data.value;

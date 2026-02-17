@@ -118,10 +118,10 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
                 <a
-                  href={contactData?.emailHref || "mailto:info@dikerstrassenbau.de"}
+                  href={contactData?.emailHref || "mailto:info@diker-bau.de"}
                   className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
                 >
-                  {contactData?.email || "info@dikerstrassenbau.de"}
+                  {contactData?.email || "info@diker-bau.de"}
                 </a>
               </li>
             </ul>
