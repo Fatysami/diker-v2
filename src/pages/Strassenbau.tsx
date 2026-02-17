@@ -37,7 +37,7 @@ const Strassenbau = () => {
   useSEOHead({
     title: "Straßenbau Solingen | Asphaltierung & Pflasterarbeiten",
     description: "Professioneller Straßenbau in Solingen ✓ Parkplätze ✓ Fahrradwege ✓ Asphaltierung ✓ Pflasterarbeiten. Kompetentes Team & moderne Ausstattung. Jetzt anfragen!",
-    canonical: "https://www.dikerstrassenbau.de/strassenbau",
+    canonical: "https://www.diker-bau.de/strassenbau",
     keywords: "Straßenbau Solingen, Asphaltierung NRW, Pflasterarbeiten, Parkplatzbau, Fahrradwege, Straßenbauunternehmen",
   });
 

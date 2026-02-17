@@ -140,7 +140,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const emailResponse = await sendEmail({
-      from: "Diker Straßenbau <onboarding@resend.dev>",
+      from: "Diker Bau <onboarding@resend.dev>",
       to: [settings.notificationEmail],
       reply_to: data.email,
       subject: data.subject ? `Kontaktanfrage: ${data.subject}` : `Neue Kontaktanfrage von ${data.name}`,
@@ -172,12 +172,12 @@ const handler = async (req: Request): Promise<Response> => {
           
           <p style="color: #374151; font-size: 16px; line-height: 1.6;">
             Mit freundlichen Grüßen,<br>
-            <strong>Ihr Team von Diker Straßenbau</strong>
+            <strong>Ihr Team von Diker Bau</strong>
           </p>
         </div>
         
         <div style="padding: 20px; background: #1f2937; text-align: center;">
-          <p style="color: #9ca3af; margin: 0 0 10px 0; font-size: 14px;">Diker Straßenbau</p>
+          <p style="color: #9ca3af; margin: 0 0 10px 0; font-size: 14px;">Diker Bau</p>
           <p style="color: #9ca3af; margin: 0; font-size: 12px;">
             ${settings.address}<br>
             Tel: ${settings.phone} | ${settings.publicEmail}
@@ -187,9 +187,9 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     await sendEmail({
-      from: "Diker Straßenbau <onboarding@resend.dev>",
+      from: "Diker Bau <onboarding@resend.dev>",
       to: [data.email],
-      subject: "Wir haben Ihre Nachricht erhalten - Diker Straßenbau",
+      subject: "Wir haben Ihre Nachricht erhalten - Diker Bau",
       html: confirmationHtml,
     });
 

@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 
 const Anfrage = () => {
   useSEOHead({
-    title: "Kostenloses Angebot anfordern | Diker Straßenbau",
+    title: "Kostenloses Angebot anfordern | Diker Bau",
     description: "Fordern Sie jetzt ein kostenloses und unverbindliches Angebot für Ihr Bauprojekt an. Straßenbau, Tiefbau, Kanalbau in Solingen. Antwort innerhalb 24-48h!",
-    canonical: "https://www.dikerstrassenbau.de/anfrage",
+    canonical: "https://www.diker-bau.de/anfrage",
     keywords: "Angebot Straßenbau, kostenlose Beratung, Bauanfrage Solingen, Tiefbau Angebot",
   });
   const [searchParams] = useSearchParams();
