@@ -169,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company with attachments
     const emailResponse = await resend.emails.send({
-      from: "Diker Bau <onboarding@resend.dev>",
+      from: "Diker Bau <info@diker-bau.de>",
       to: [notificationEmail],
       reply_to: data.email,
       subject: `Neue Anfrage: ${data.workType} - ${data.firstName} ${data.lastName}`,
@@ -220,7 +220,7 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     await resend.emails.send({
-      from: "Diker Bau <onboarding@resend.dev>",
+      from: "Diker Bau <info@diker-bau.de>",
       to: [data.email],
       subject: "Ihre Anfrage bei Diker Bau",
       html: confirmationHtml,
