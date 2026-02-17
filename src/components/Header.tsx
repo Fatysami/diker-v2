@@ -71,7 +71,7 @@ const Header = () => {
                 Diker
               </span>
               <span className="text-muted-foreground text-xs leading-tight">
-                Straßenbau
+                Bau
               </span>
             </div>
           </Link>
