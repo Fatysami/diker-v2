@@ -41,7 +41,7 @@ const Kanalbau = () => {
   useSEOHead({
     title: "Kanalbau & Dichtheitsprüfung Solingen | Rohrleitungen",
     description: "Kanalbau & Dichtheitsprüfung in Solingen ✓ Abwasserleitungen ✓ Gasleitungen ✓ Wasserleitungen. Professionelle Prüfung nach DIN. Jetzt Termin vereinbaren!",
-    canonical: "https://www.dikerstrassenbau.de/kanalbau",
+    canonical: "https://www.diker-bau.de/kanalbau",
     keywords: "Kanalbau Solingen, Dichtheitsprüfung NRW, Abwasserleitungen, Gasleitungen prüfen, Rohrleitungsbau",
   });
 
