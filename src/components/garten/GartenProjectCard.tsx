@@ -54,6 +54,14 @@ const GartenProjectCard = ({
   const IconComponent = iconMap[icon] || Warehouse;
   const isEven = index % 2 === 0;
 
+  // Build image group for lightbox navigation
+  const imageGroup = [
+    imageUrl ? { src: imageUrl, alt: `${title} - Hauptbild` } : null,
+    imageUrl2 ? { src: imageUrl2, alt: `${title} - Bild 2` } : null,
+    imageUrl3 ? { src: imageUrl3, alt: `${title} - Bild 3` } : null,
+    imageUrl4 ? { src: imageUrl4, alt: `${title} - Bild 4` } : null,
+  ].filter(Boolean) as { src: string; alt: string }[];
+
   const ImagesSection = () => (
     <div className="flex h-full">
       {/* Large main image */}
@@ -65,6 +73,7 @@ const GartenProjectCard = ({
             className="w-full h-full object-cover"
             containerClassName="w-full h-full"
             style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint) }}
+            imageGroup={imageGroup}
           />
         ) : (
           <ImagePlaceholder icon={IconComponent} size="large" />
@@ -81,6 +90,7 @@ const GartenProjectCard = ({
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
               style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint2) }}
+              imageGroup={imageGroup}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -94,6 +104,7 @@ const GartenProjectCard = ({
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
               style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint3) }}
+              imageGroup={imageGroup}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />
@@ -107,6 +118,7 @@ const GartenProjectCard = ({
               className="w-full h-full object-cover"
               containerClassName="w-full h-full"
               style={{ objectPosition: focalPointToObjectPosition(imageFocalPoint4) }}
+              imageGroup={imageGroup}
             />
           ) : (
             <ImagePlaceholder icon={ImageIcon} size="small" />

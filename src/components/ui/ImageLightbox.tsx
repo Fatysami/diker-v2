@@ -1,18 +1,19 @@
 import { useEffect, useCallback } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useImageLightbox } from "@/hooks/useImageLightbox";
 
 const ImageLightbox = () => {
-  const { state, closeImage } = useImageLightbox();
+  const { state, closeImage, nextImage, prevImage } = useImageLightbox();
+  const hasMultiple = state.images.length > 1;
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closeImage();
-      }
+      if (e.key === "Escape") closeImage();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
     },
-    [closeImage]
+    [closeImage, nextImage, prevImage]
   );
 
   useEffect(() => {
@@ -46,6 +47,26 @@ const ImageLightbox = () => {
             <X className="w-6 h-6" />
           </button>
 
+          {/* Navigation Arrows */}
+          {hasMultiple && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                className="absolute left-2 md:left-4 z-10 p-2 md:p-3 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors"
+                aria-label="Vorheriges Bild"
+              >
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                className="absolute right-2 md:right-4 z-10 p-2 md:p-3 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-colors"
+                aria-label="Nächstes Bild"
+              >
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            </>
+          )}
+
           {/* Image container */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -60,9 +81,10 @@ const ImageLightbox = () => {
               alt={state.imageAlt}
               className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
             />
-            {state.imageAlt && (
+            {(state.imageAlt || hasMultiple) && (
               <p className="text-white/70 text-center mt-4 text-sm">
                 {state.imageAlt}
+                {hasMultiple && ` • ${state.currentIndex + 1} / ${state.images.length}`}
               </p>
             )}
           </motion.div>
