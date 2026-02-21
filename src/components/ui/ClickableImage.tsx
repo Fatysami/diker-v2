@@ -9,6 +9,7 @@ interface ClickableImageProps {
   containerClassName?: string;
   showZoomIcon?: boolean;
   style?: React.CSSProperties;
+  imageGroup?: { src: string; alt: string }[];
 }
 
 const ClickableImage = ({
@@ -18,6 +19,7 @@ const ClickableImage = ({
   containerClassName = "",
   showZoomIcon = true,
   style,
+  imageGroup,
 }: ClickableImageProps) => {
   const { openImage } = useImageLightbox();
 
@@ -27,7 +29,7 @@ const ClickableImage = ({
         "relative cursor-pointer group overflow-hidden",
         containerClassName
       )}
-      onClick={() => openImage(src, alt)}
+      onClick={() => openImage(src, alt, imageGroup)}
     >
       <img
         src={src}
